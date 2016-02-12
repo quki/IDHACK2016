@@ -1,8 +1,9 @@
 package com.pure.gothic.hackathon.idhackandroid;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-// jae, lemonhall2, CYhan
+import android.support.v7.app.AppCompatActivity;
+
+// jae, lemonhall2, CYhan, quki
 public class MainActivity extends AppCompatActivity {
 
     @Override
