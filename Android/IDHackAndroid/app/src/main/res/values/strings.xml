@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">IDHackAndroid</string>
+    <string name="title_activity_communicate">CommunicateActivity</string>
+    <string name="title_activity_chat_bubble">ChatBubbleActivity</string>
+    <string name="title_activity_chat_message">ChatMessage</string>
+    <string name="title_activity_chat_bubble_activity_for_patient">ChatBubbleActivityForPatient
+    </string>
 </resources>
