@@ -2,42 +2,29 @@ package com.pure.gothic.hackathon.idhackandroid;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.StringRequest;
-import com.pure.gothic.hackathon.idhackandroid.dialog.DialogHelper;
 import com.pure.gothic.hackathon.idhackandroid.login.LoginActivity;
 import com.pure.gothic.hackathon.idhackandroid.login.SessionManager;
-import com.pure.gothic.hackathon.idhackandroid.volley.AppController;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivityDoctor extends AppCompatActivity {
 
-    DialogHelper mDialogHelper;
     String yourId;
     private SessionManager session;
     private Toolbar mToolbar;
-    private TextView mPhone;
+    private EditText otherPhone;
+    private Button requestBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +32,10 @@ public class MainActivityDoctor extends AppCompatActivity {
         setContentView(R.layout.activity_main_doctor);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mPhone = (TextView) findViewById(R.id.mPhone);
+        otherPhone = (EditText) findViewById(R.id.otherPhone);
+        requestBtn = (Button) findViewById(R.id.requestBtn);
+        requestBtn.setEnabled(false);
         setSupportActionBar(mToolbar);
-
-        mDialogHelper = new DialogHelper(this);
-        requestByVolley();
 
         Intent intent = getIntent();
         yourId = intent.getStringExtra("yourId");
@@ -67,78 +53,47 @@ public class MainActivityDoctor extends AppCompatActivity {
         if (!session.isLoggedIn()) {
             logoutUser();
         }
+
+        otherPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() != 0){
+                    requestBtn.setEnabled(true);
+                }else{
+                    requestBtn.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        requestBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivityDoctor.this, ChatBubbleActivityForDoctor.class);
+                i.putExtra("send_num", otherPhone.getText().toString());
+                i.putExtra("num", yourId);
+                startActivity(i);
+            }
+        });
     }
     private void logoutUser() {
-        session.setLogin(false, yourId,1);
+        session.setLogin(false, yourId, 1);
         // Launching the login activity
         Intent intent = new Intent(MainActivityDoctor.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
 
-
-
-
-    // DB로 부터 response받고,JSON파싱 이후 adapter에 저장 (데이터 변화 감지)
-    private void requestByVolley(){
-        mDialogHelper.showPdialog("PLEASE WAIT...", true);
-
-        StringRequest strReq = new StringRequest(Request.Method.POST, "REQUEST URL",
-                new Response.Listener<String>() {
-
-                    @Override
-                    public void onResponse(String response) {
-
-                        mDialogHelper.hidePdialog();
-                        try {
-                            // String response -> JSON Array -> JSON Object 추출 -> 개별 항목 parsing
-                            JSONArray jArray = new JSONArray(response);
-
-                        } catch (JSONException e) {
-                            Log.e("==MTAG==", "JSONException : " + e.getMessage());
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("==MTAG==", "Error: " + error.getMessage());
-
-                mDialogHelper.hidePdialog();
-
-
-                Toast.makeText(getApplicationContext(), "CHECK YOUR NETWORK STATUS", Toast.LENGTH_SHORT).show();
-
-            }
-        }) {
-            // POST방식으로 Parmaeter를 URL에 전달, 계정정보만 전달
-            @Override
-            protected Map<String, String> getParams() {
-
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("number", "01076779064");
-                params.put("message", "HELLO WORLD!");
-                return params;
-            }
-
-            // UTF-8로 Encoding하는 작업
-            @Override
-            protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                try {
-                    String utf8String = new String(response.data, "UTF-8");
-                    return Response.success(new String(utf8String), HttpHeaderParser.parseCacheHeaders(response));
-                } catch (UnsupportedEncodingException e) {
-                    return Response.error(new ParseError(e));
-                }
-            }
-
-        };
-
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(strReq);
-
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

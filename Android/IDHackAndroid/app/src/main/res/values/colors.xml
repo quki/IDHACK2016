@@ -8,11 +8,11 @@
     <color name="mainblue_dark">#1976D2</color>
 
     <!--login-->
-    <color name="bg_login">#2196F3</color>
-    <color name="bg_edittext_login">#D90c7cd5</color>
-    <color name="input_login">#222222</color>
-    <color name="input_login_hint">#BFE0E0E0</color>
-    <color name="btn_login_text">#0a6ebd</color>
+    <color name="bg_login">#dd3dff</color>
+    <color name="bg_edittext_login">#ebb1ff</color>
+    <color name="input_login">#ffffff</color>
+    <color name="input_login_hint">#ffffff</color>
+    <color name="btn_login_text">#dd3dff</color>
     <color name="btn_login_bg">#eceef1</color>
 
     <!-- clickstate -->

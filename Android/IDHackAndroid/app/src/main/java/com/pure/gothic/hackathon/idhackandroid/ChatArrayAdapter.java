@@ -3,9 +3,13 @@ package com.pure.gothic.hackathon.idhackandroid;
 /**
  * Created by SAMSUNG on 2016-02-13.
  */
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,8 +56,14 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
         ChatMessage chatMessageObj = getItem(position);
         chatText = (TextView) row.findViewById(R.id.singleMessage);
         chatText.setText(chatMessageObj.message);
-        chatText.setBackgroundResource(chatMessageObj.left ? R.drawable.bubble_a : R.drawable.bubble_b);
-        singleMessageContainer.setGravity(chatMessageObj.left ? Gravity.LEFT : Gravity.RIGHT);
+
+        Log.e("asdfsadfsaf",chatMessageObj.left+"");
+        chatText.setBackground(chatMessageObj.left == 1 ? ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.textview_left, null) : ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.textview_right, null));
+        chatText.setTextColor(chatMessageObj.left ==1 ? Color.parseColor("#4c4c4c") : Color.parseColor("#4c4c4c"));
+
+
+
+        singleMessageContainer.setGravity(chatMessageObj.left == 1 ? Gravity.LEFT : Gravity.RIGHT);
         return row;
     }
 
