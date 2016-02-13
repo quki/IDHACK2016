@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,15 +40,18 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView btnLinkToLogin;
 
     private EditText inputEmail,inputPassword,inputPasswordCheck;
+    private CheckBox askDoctor;
     private LinearLayout rootView;
     private DialogHelper mDialogHelper;
 
     private SessionManager mSessionManager;
 
+    private int role = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
 
         inputEmail = (EditText)findViewById(R.id.email);
         inputPassword = (EditText)findViewById(R.id.password);
@@ -54,6 +59,8 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = (Button)findViewById(R.id.btnRegister);
         btnLinkToLogin = (TextView)findViewById(R.id.btnLinkToLoginScreen);
         rootView = (LinearLayout)findViewById(R.id.registerActivityView);
+        askDoctor = (CheckBox)findViewById(R.id.askDoctor);
+        askDoctor.setChecked(false);
 
         // 공백을 클릭시 EditText의 focus와 자판이 사라지게 하기
         rootView.setOnTouchListener(new View.OnTouchListener() {
@@ -63,6 +70,19 @@ public class RegisterActivity extends AppCompatActivity {
                 InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 return false;
+            }
+        });
+
+        askDoctor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    role =1;
+                    Toast.makeText(getApplicationContext(),role+"",Toast.LENGTH_SHORT).show();
+                }else{
+                    role =0;
+                    Toast.makeText(getApplicationContext(),role+"",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -137,6 +157,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                                 intent.putExtra("email",email );
                                 intent.putExtra("password",password );
+                                intent.putExtra("role",role );
                                 startActivity(intent);
                                 finish();
 

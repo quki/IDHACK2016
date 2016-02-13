@@ -24,7 +24,8 @@ public class SessionManager {
     private static final String PREF_NAME = "Idhack_Login";
     private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
     public static final String KEY_YOUR_EMAIL = "yourEmail";
- 
+    public static final String KEY_YOUR_ROLE = "yourRole";
+
     public SessionManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
@@ -32,10 +33,11 @@ public class SessionManager {
     }
  
     // Log in 상태를 저장 ( 당신의 Log in된 email을 갖고 있다. )
-    public void setLogin(boolean isLoggedIn,String email) {
+    public void setLogin(boolean isLoggedIn,String email,int role) {
  
         editor.putBoolean(KEY_IS_LOGGEDIN, isLoggedIn);
-        editor.putString(KEY_YOUR_EMAIL,email);
+        editor.putString(KEY_YOUR_EMAIL, email);
+        editor.putInt(KEY_YOUR_ROLE, role);
         // commit changes
         editor.commit();
         Log.d(TAG, "User login session modified!");
@@ -57,6 +59,15 @@ public class SessionManager {
         // user email id
         user.put(KEY_YOUR_EMAIL, pref.getString(KEY_YOUR_EMAIL, null));
          
+        // return user
+        return user;
+    }
+    public HashMap<String,Integer> getUserRole(){
+        HashMap<String,Integer> user = new HashMap<>();
+
+        // user email id
+        user.put(KEY_YOUR_ROLE, pref.getInt(KEY_YOUR_ROLE, 0));
+
         // return user
         return user;
     }

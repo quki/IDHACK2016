@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.pure.gothic.hackathon.idhackandroid.MainActivity;
+import com.pure.gothic.hackathon.idhackandroid.MainActivityDoctor;
 import com.pure.gothic.hackathon.idhackandroid.R;
 import com.pure.gothic.hackathon.idhackandroid.dialog.DialogHelper;
 import com.pure.gothic.hackathon.idhackandroid.volley.AppController;
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private DialogHelper mDialogHelper;
     private SessionManager mSessionManager;
     private LinearLayout rootView;
+    private int role = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,8 @@ public class LoginActivity extends AppCompatActivity {
         Intent fromRegisterIntent = getIntent();
         String fromRegisterEmail = fromRegisterIntent.getStringExtra("email");
         String fromRegisterPwd = fromRegisterIntent.getStringExtra("password");
+        role = fromRegisterIntent.getIntExtra("role",0);
+        Toast.makeText(getApplicationContext(),""+role,Toast.LENGTH_SHORT).show();
 
         if(fromRegisterEmail !=null && fromRegisterPwd != null){
             inputEmail.setText(fromRegisterEmail);
@@ -86,12 +90,25 @@ public class LoginActivity extends AppCompatActivity {
 
             // get user data from session
             HashMap<String, String> user = mSessionManager.getUserDetails();
+            HashMap<String, Integer> userRole = mSessionManager.getUserRole();
             String yourEmail  = user.get(SessionManager.KEY_YOUR_EMAIL);
+
+
+
+            int roleFromSession = userRole.get(SessionManager.KEY_YOUR_ROLE);
             // 이미 로그인이 되어있으면 HomeActivity로
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtra("yourId",yourEmail);
-            startActivity(intent);
-            finish();
+            if(roleFromSession == 0){
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra("yourId",yourEmail);
+                startActivity(intent);
+                finish();
+            }else if(roleFromSession == 1){
+                Intent intent = new Intent(LoginActivity.this, MainActivityDoctor.class);
+                intent.putExtra("yourId",yourEmail);
+                startActivity(intent);
+                finish();
+            }
+
         }
 
         // Login button Click Event
@@ -146,20 +163,36 @@ public class LoginActivity extends AppCompatActivity {
 
                 try {
                     JSONObject jObj = new JSONObject(response);
+                    Log.e("@@@@@@@@@", jObj.toString());
                     boolean error = jObj.getBoolean("error");
+
 
                     // 로그인 에러 체크
                     if (!error) {
                         // user successfully logged in
                         // Create login session
-                        mSessionManager.setLogin(true,email);
+                        JSONObject jObjUser = jObj.getJSONObject("user");
+                        String em = jObjUser.getString("email");
+                        Log.e("@@@str@@@", em);
+                        mSessionManager.setLogin(true, email, role);
 
-                        // Launch main activity
-                        Intent intent = new Intent(LoginActivity.this,
-                                MainActivity.class);
-                        intent.putExtra("yourId", email);
-                        startActivity(intent);
-                        finish();
+                        if(role == 0){
+                            // Launch main activity
+                            Intent intent = new Intent(LoginActivity.this,
+                                    MainActivity.class);
+                            intent.putExtra("yourId", email);
+                            startActivity(intent);
+                            finish();
+                        }else if(role == 1){
+                            // Launch main activity
+                            Intent intent = new Intent(LoginActivity.this,
+                                    MainActivityDoctor.class);
+                            intent.putExtra("yourId", email);
+                            startActivity(intent);
+                            finish();
+                        }
+
+
                     } else {
                         // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");
