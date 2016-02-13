@@ -1,8 +1,20 @@
 <resources>
     <string name="app_name">IDHackAndroid</string>
+<<<<<<< HEAD
     <string name="title_activity_communicate">CommunicateActivity</string>
     <string name="title_activity_chat_bubble">ChatBubbleActivity</string>
     <string name="title_activity_chat_message">ChatMessage</string>
     <string name="title_activity_chat_bubble_activity_for_patient">ChatBubbleActivityForPatient
     </string>
+=======
+    <!-- Login -->
+    <string name="hint_email">YOUR PHONE NUMBER</string>
+    <string name="hint_password">CREATE PASSWORD</string>
+    <string name="hint_password_check">CONFIRM PASSWORD</string>
+    <string name="btn_login">SIGN IN</string>
+    <string name="btn_register">SIGN UP</string>
+    <string name="btn_link_to_register">GO SIGN UP</string>
+    <string name="btn_link_to_login">GO SIGN IN</string>
+    <string name="btn_logout">SIGN OUT</string>
+>>>>>>> 2a06889342d88e8f8f91ff537547e230f3254b8a
 </resources>

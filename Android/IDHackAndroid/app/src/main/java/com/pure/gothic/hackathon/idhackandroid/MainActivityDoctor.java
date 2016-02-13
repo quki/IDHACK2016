@@ -1,15 +1,10 @@
 package com.pure.gothic.hackathon.idhackandroid;
 
-<<<<<<< HEAD
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-=======
 import android.content.DialogInterface;
 import android.content.Intent;
->>>>>>> 2a06889342d88e8f8f91ff537547e230f3254b8a
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -36,8 +31,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-// jae, lemonhall2, CYhan, gon, quki
-public class MainActivity extends AppCompatActivity {
+public class MainActivityDoctor extends AppCompatActivity {
 
     DialogHelper mDialogHelper;
     String yourId;
@@ -48,12 +42,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_doctor);
 
-<<<<<<< HEAD
-        Intent intent=new Intent(MainActivity.this,ChatBubbleActivityForDoctor.class);
-        startActivity(intent);
-=======
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mPhone = (TextView) findViewById(R.id.mPhone);
         setSupportActionBar(mToolbar);
@@ -78,11 +68,10 @@ public class MainActivity extends AppCompatActivity {
             logoutUser();
         }
     }
-
     private void logoutUser() {
-        session.setLogin(false, yourId,0);
+        session.setLogin(false, yourId,1);
         // Launching the login activity
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        Intent intent = new Intent(MainActivityDoctor.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
@@ -153,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main_doc, menu);
         return true;
     }
 
@@ -167,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
             // AlertDialog
             AlertDialog.Builder mAlertBuilder = new AlertDialog.Builder(
-                    MainActivity.this);
+                    MainActivityDoctor.this);
             mAlertBuilder.setTitle("SIGN OUT")
                     .setMessage("REALLY?")
                     .setCancelable(false)
@@ -190,6 +179,5 @@ public class MainActivity extends AppCompatActivity {
             dialog.show();
         }
         return super.onOptionsItemSelected(item);
->>>>>>> 2a06889342d88e8f8f91ff537547e230f3254b8a
     }
 }

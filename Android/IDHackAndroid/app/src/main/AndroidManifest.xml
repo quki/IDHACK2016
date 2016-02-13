@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pure.gothic.hackathon.idhackandroid">
+<<<<<<< HEAD
+=======
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+>>>>>>> 2a06889342d88e8f8f91ff537547e230f3254b8a
 
     <application
+        android:name=".volley.AppController"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+<<<<<<< HEAD
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
+=======
+        android:theme="@style/MyMaterialTheme">
+        <activity android:name=".login.LoginActivity">
+>>>>>>> 2a06889342d88e8f8f91ff537547e230f3254b8a
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
         <activity
             android:name=".ChatBubbleActivityForDoctor"
             android:label="@string/title_activity_chat_bubble"
@@ -27,6 +40,11 @@
             android:name=".ChatBubbleActivityForPatient"
             android:label="@string/title_activity_chat_bubble_activity_for_patient"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+=======
+        <activity android:name=".MainActivity" />
+        <activity android:name=".login.RegisterActivity" />
+        <activity android:name=".MainActivityDoctor"></activity>
+>>>>>>> 2a06889342d88e8f8f91ff537547e230f3254b8a
     </application>
 
 </manifest>

@@ -78,5 +78,4 @@ public class ChatBubbleActivityForDoctor extends Activity {
     }
 
 
-    //볼리 데이터값 받아오기
 }
