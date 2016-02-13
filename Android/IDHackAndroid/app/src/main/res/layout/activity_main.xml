@@ -8,8 +8,19 @@
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
-    <TextView
-        android:id="@+id/mPhone"
+    <EditText
+        android:id="@+id/otherPhone"
+        android:layout_centerInParent="true"
+        android:layout_width="400dp"
+        android:gravity="clip_horizontal"
+        android:hint="DOCTOR's PHONE NUMBER"
+        android:inputType="number"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/requestBtn"
+        android:layout_below="@+id/otherPhone"
+        android:layout_centerHorizontal="true"
+        android:text="SHOW"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </RelativeLayout>
