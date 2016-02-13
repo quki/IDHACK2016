@@ -94,6 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // 유저가 한번 로그인 했었는지 체크
         if (mSessionManager.isLoggedIn()) {
+
             // 유저가 이미 로그인 했었을 때...
             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
             startActivity(intent);
@@ -200,6 +201,7 @@ public class RegisterActivity extends AppCompatActivity {
                 params.put("name", "user");
                 params.put("email", email);
                 params.put("password", password);
+                params.put("role", role+"");
                 params.put("tag", "register");
                 return params;
             }

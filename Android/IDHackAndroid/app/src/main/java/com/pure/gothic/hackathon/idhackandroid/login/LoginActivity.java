@@ -71,7 +71,6 @@ public class LoginActivity extends AppCompatActivity {
         String fromRegisterEmail = fromRegisterIntent.getStringExtra("email");
         String fromRegisterPwd = fromRegisterIntent.getStringExtra("password");
         role = fromRegisterIntent.getIntExtra("role",0);
-        Toast.makeText(getApplicationContext(),""+role,Toast.LENGTH_SHORT).show();
 
         if(fromRegisterEmail !=null && fromRegisterPwd != null){
             inputEmail.setText(fromRegisterEmail);
@@ -163,7 +162,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 try {
                     JSONObject jObj = new JSONObject(response);
-                    Log.e("@@@@@@@@@", jObj.toString());
                     boolean error = jObj.getBoolean("error");
 
 
@@ -172,8 +170,8 @@ public class LoginActivity extends AppCompatActivity {
                         // user successfully logged in
                         // Create login session
                         JSONObject jObjUser = jObj.getJSONObject("user");
-                        String em = jObjUser.getString("email");
-                        Log.e("@@@str@@@", em);
+                        String r = jObjUser.getString("role");
+                        role = Integer.parseInt(r);
                         mSessionManager.setLogin(true, email, role);
 
                         if(role == 0){
@@ -222,6 +220,7 @@ public class LoginActivity extends AppCompatActivity {
                 params.put("tag", "login");
                 params.put("email", email);
                 params.put("password", password);
+                params.put("role", role+"");
 
                 return params;
             }
