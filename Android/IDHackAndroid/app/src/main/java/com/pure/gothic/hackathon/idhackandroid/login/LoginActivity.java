@@ -18,6 +18,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.pure.gothic.hackathon.idhackandroid.ChatBubbleActivityForDoctor;
 import com.pure.gothic.hackathon.idhackandroid.MainActivity;
 import com.pure.gothic.hackathon.idhackandroid.MainActivityDoctor;
 import com.pure.gothic.hackathon.idhackandroid.R;
@@ -48,6 +49,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Intent i = new Intent(LoginActivity.this, ChatBubbleActivityForDoctor.class);
+        startActivity(i);
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);

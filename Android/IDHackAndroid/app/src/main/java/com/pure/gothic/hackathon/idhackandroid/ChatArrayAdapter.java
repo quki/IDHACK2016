@@ -6,6 +6,8 @@ package com.pure.gothic.hackathon.idhackandroid;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +54,12 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
         ChatMessage chatMessageObj = getItem(position);
         chatText = (TextView) row.findViewById(R.id.singleMessage);
         chatText.setText(chatMessageObj.message);
-        chatText.setBackgroundResource(chatMessageObj.left ? R.drawable.bubble_a : R.drawable.bubble_b);
+
+        chatText.setBackground(chatMessageObj.left ? ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.textview_left, null) : ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.textview_right, null));
+        chatText.setTextColor(chatMessageObj.left ? Color.parseColor("#FFFFFF") : Color.parseColor("#2196F3"));
+
+
+
         singleMessageContainer.setGravity(chatMessageObj.left ? Gravity.LEFT : Gravity.RIGHT);
         return row;
     }
