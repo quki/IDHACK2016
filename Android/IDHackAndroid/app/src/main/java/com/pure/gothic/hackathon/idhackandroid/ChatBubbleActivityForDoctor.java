@@ -71,9 +71,9 @@ public class ChatBubbleActivityForDoctor extends Activity {
     }
 
     private boolean sendChatMessage(){
-        chatArrayAdapter.add(new ChatMessage(side, phoneNumber, chatText.getText().toString()));
+        chatArrayAdapter.add(new ChatMessage(true, phoneNumber, chatText.getText().toString()));
         chatText.setText("");
-        side = !side;
+        //side = !side;
         return true;
     }
 
