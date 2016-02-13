@@ -6,9 +6,9 @@ public class ChatMessage {
     public String message;
    // public String date;
 
-    public ChatMessage(boolean left, String phoneNumber,String message) {
+    public ChatMessage(String left, String phoneNumber,String message) {
         super();
-        this.left = left;
+        this.left = Boolean.parseBoolean(left);
         this.phoneNumber=phoneNumber;
         this.message = message;
     }
