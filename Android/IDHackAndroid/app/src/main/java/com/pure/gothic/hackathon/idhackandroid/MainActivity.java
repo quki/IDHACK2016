@@ -100,7 +100,9 @@ public class MainActivity extends AppCompatActivity {
         requestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),otherPhone.getText().toString(),Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(MainActivity.this,ChatBubbleActivityForPatient.class);
+                i.putExtra("phoneNumber",otherPhone.getText().toString());
+                startActivity(i);
             }
         });
     }
