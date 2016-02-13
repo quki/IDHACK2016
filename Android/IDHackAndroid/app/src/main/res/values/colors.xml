@@ -3,4 +3,19 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="white">#ffffff</color>
+    <color name="mainblue">#2196F3</color>
+    <color name="mainblue_dark">#1976D2</color>
+
+    <!--login-->
+    <color name="bg_login">#2196F3</color>
+    <color name="bg_edittext_login">#D90c7cd5</color>
+    <color name="input_login">#222222</color>
+    <color name="input_login_hint">#BFE0E0E0</color>
+    <color name="btn_login_text">#0a6ebd</color>
+    <color name="btn_login_bg">#eceef1</color>
+
+    <!-- clickstate -->
+    <color name="clickstate">#C5CAE9</color>
+    <color name="shadow">#32000000</color>
 </resources>

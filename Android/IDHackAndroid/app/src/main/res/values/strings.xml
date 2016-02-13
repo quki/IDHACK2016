@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">IDHackAndroid</string>
+    <!-- Login -->
+    <string name="hint_email">YOUR PHONE NUMBER</string>
+    <string name="hint_password">CREATE PASSWORD</string>
+    <string name="hint_password_check">CONFIRM PASSWORD</string>
+    <string name="btn_login">SIGN IN</string>
+    <string name="btn_register">SIGN UP</string>
+    <string name="btn_link_to_register">GO SIGN UP</string>
+    <string name="btn_link_to_login">GO SIGN IN</string>
+    <string name="btn_logout">SIGN OUT</string>
 </resources>
