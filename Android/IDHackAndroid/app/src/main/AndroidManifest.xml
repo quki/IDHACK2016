@@ -19,6 +19,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ChatBubbleActivityForDoctor"
+            android:label="@string/title_activity_chat_bubble" />
+        <activity
+            android:name=".ChatMessage"
+            android:label="@string/title_activity_chat_message" />
+        <activity
+            android:name=".ChatBubbleActivityForPatient"
+            android:label="@string/title_activity_chat_bubble_activity_for_patient"></activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".login.RegisterActivity" />
         <activity android:name=".MainActivityDoctor" />

@@ -1,10 +1,10 @@
 package com.pure.gothic.hackathon.idhackandroid;
 
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -62,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         yourId = intent.getStringExtra("yourId");
 
-        if (yourId != null){
+        if (yourId != null) {
             setTitle(yourId);
-        }else {
+        } else {
             Toast.makeText(this, "LOGIN ERROR", Toast.LENGTH_SHORT).show();
             logoutUser();
         }
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logoutUser() {
-        session.setLogin(false, yourId,0);
+        session.setLogin(false, yourId, 0);
         // Launching the login activity
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
@@ -114,10 +114,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     // DB로 부터 response받고,JSON파싱 이후 adapter에 저장 (데이터 변화 감지)
-    private void requestByVolley(){
+    private void requestByVolley() {
         mDialogHelper.showPdialog("PLEASE WAIT...", true);
 
         StringRequest strReq = new StringRequest(Request.Method.POST, "REQUEST URL",
@@ -176,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(strReq);
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
