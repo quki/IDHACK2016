@@ -35,34 +35,24 @@ import java.util.Map;
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = RegisterActivity.class.getSimpleName();
-
-    private Button btnRegister;
-    private TextView btnLinkToLogin;
-
-    private EditText inputEmail,inputPassword,inputPasswordCheck;
-    private CheckBox askDoctor;
-    private LinearLayout rootView;
     private DialogHelper mDialogHelper;
+    private int role;
 
-    private SessionManager mSessionManager;
-
-    private int role = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-
-        inputEmail = (EditText)findViewById(R.id.email);
-        inputPassword = (EditText)findViewById(R.id.password);
-        inputPasswordCheck = (EditText)findViewById(R.id.password_check);
-        btnRegister = (Button)findViewById(R.id.btnRegister);
-        btnLinkToLogin = (TextView)findViewById(R.id.btnLinkToLoginScreen);
-        rootView = (LinearLayout)findViewById(R.id.registerActivityView);
-        askDoctor = (CheckBox)findViewById(R.id.askDoctor);
+        final EditText inputName = (EditText) findViewById(R.id.name);
+        final EditText inputPassword = (EditText) findViewById(R.id.password);
+        final EditText inputPasswordCheck = (EditText) findViewById(R.id.password_check);
+        final Button btnRegister = (Button) findViewById(R.id.btnRegister);
+        final TextView btnLinkToLogin = (TextView) findViewById(R.id.btnLinkToLoginScreen);
+        final LinearLayout rootView = (LinearLayout) findViewById(R.id.registerActivityView);
+        final CheckBox askDoctor = (CheckBox) findViewById(R.id.askDoctor);
         askDoctor.setChecked(false);
 
-        // 공백을 클릭시 EditText의 focus와 자판이 사라지게 하기
+        // 공백 클릭시 EditText의 focus와 자판이 사라지게 하기
         rootView.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
@@ -73,15 +63,16 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        // 의사 인지 여부 check box toggle
         askDoctor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    role =1;
-                    Toast.makeText(getApplicationContext(),role+"",Toast.LENGTH_SHORT).show();
-                }else{
-                    role =0;
-                    Toast.makeText(getApplicationContext(),role+"",Toast.LENGTH_SHORT).show();
+                if (isChecked) {
+                    role = 1;
+                    Toast.makeText(getApplicationContext(), role + "", Toast.LENGTH_SHORT).show();
+                } else {
+                    role = 0;
+                    Toast.makeText(getApplicationContext(), role + "", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -90,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
         mDialogHelper = new DialogHelper(this);
 
         // Session manager
-        mSessionManager = new SessionManager(getApplicationContext());
+        SessionManager mSessionManager = new SessionManager(getApplicationContext());
 
         // 유저가 한번 로그인 했었는지 체크
         if (mSessionManager.isLoggedIn()) {
@@ -101,18 +92,18 @@ public class RegisterActivity extends AppCompatActivity {
             finish();
         }
 
-        // Register Button Click event
+        // 회원가입
         btnRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                String email = inputEmail.getText().toString();
+                String name = inputName.getText().toString();
                 String password = inputPassword.getText().toString();
                 String passwordCheck = inputPasswordCheck.getText().toString();
-
-                if (email.trim().length() > 0 && password.trim().length() > 0 && passwordCheck.trim().length()>0) {
-
-                    if(password.equals(passwordCheck)){
-                        registerUser(email, password);
-                    }else{
+                // 이름에 공백유무 확인
+                if (name.trim().length() > 0 && password.trim().length() > 0 && passwordCheck.trim().length() > 0) {
+                    // 비밀번호 일치여부 확인
+                    if (password.equals(passwordCheck)) {
+                        registerUser(name, password);
+                    } else {
                         Toast.makeText(RegisterActivity.this, "PASSWORD NO MATCH", Toast.LENGTH_LONG).show();
                         inputPassword.requestFocus();
                     }
@@ -122,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        // Link to Login Screen
+        // Login 화면으로 전환
         btnLinkToLogin.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
@@ -133,14 +124,17 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    // 서버에 회원 정보 insert
-    private void registerUser(final String email, final String password) {
 
-        String tag_string_req = "req_register";
+    /**
+     * DB에 회원 정보 insert, POST 방식
+     * @param name 회원이름(ID)
+     * @param password 비밀번호
+     */
+    private void registerUser(final String name, final String password) {
 
         mDialogHelper.showPdialog("PLEASE WAIT...", false);
 
-        StringRequest strReq = new StringRequest(Request.Method.POST, NetworkConfig.URL_REGISTER,
+        StringRequest strReq = new StringRequest(Request.Method.POST, NetworkConfig.URL_ACCOUNT,
                 new Response.Listener<String>() {
 
                     @Override
@@ -152,27 +146,27 @@ public class RegisterActivity extends AppCompatActivity {
                             JSONObject jObj = new JSONObject(response);
                             boolean error = jObj.getBoolean("error");
 
-                            // User가 성공적으로 계정정보를 MySQL로 TABLE에 저장한 경우
+                            // 회원 정보 DB insert success
                             if (!error) {
                                 // Launch login activity
                                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                intent.putExtra("email",email );
-                                intent.putExtra("password",password );
-                                intent.putExtra("role",role );
+                                intent.putExtra("name", name);
+                                intent.putExtra("password", password);
+                                intent.putExtra("role", role);
                                 startActivity(intent);
                                 finish();
 
                                 Toast.makeText(RegisterActivity.this, "COMPLETE",
                                         Toast.LENGTH_LONG).show();
 
-                                // 계정정보 TABLE에 저장 실패
-                            } else{
+                            // 회원 정보 DB insert fail
+                            } else {
 
                                 String errorMsg = jObj.getString("error_msg");
-                                if(errorMsg.equals("User already existed")){
+                                if (errorMsg.equals("User already existed")) {
                                     Toast.makeText(RegisterActivity.this,
                                             "ALREADY REGISTERED PHONE NUMBER", Toast.LENGTH_LONG).show();
-                                }else{
+                                } else {
                                     Toast.makeText(RegisterActivity.this,
                                             errorMsg, Toast.LENGTH_LONG).show();
                                 }
@@ -198,18 +192,17 @@ public class RegisterActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 // Posting params to register url
                 Map<String, String> params = new HashMap<>();
-                params.put("name", "user");
-                params.put("email", email);
-                params.put("password", password);
-                params.put("role", role+"");
                 params.put("tag", "register");
+                params.put("name", name);
+                params.put("password", password);
+                params.put("role", role + "");
                 return params;
             }
 
         };
 
         // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+        AppController.getInstance().addToRequestQueue(strReq, TAG);
 
     }
 }

@@ -34,26 +34,21 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
 
     // LogCat tag
-    private static final String TAG = RegisterActivity.class.getSimpleName();
-    private Button btnLogin;
-    private TextView btnLinkToRegister;
-    private EditText inputEmail;
-    private EditText inputPassword;
+    private static final String TAG = LoginActivity.class.getSimpleName();
     private DialogHelper mDialogHelper;
     private SessionManager mSessionManager;
-    private LinearLayout rootView;
-    private int role = 0;
+    private int role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        inputEmail = (EditText) findViewById(R.id.email);
-        inputPassword = (EditText) findViewById(R.id.password);
-        btnLogin = (Button) findViewById(R.id.btnLogin);
-        btnLinkToRegister = (TextView) findViewById(R.id.btnLinkToRegisterScreen);
-        rootView = (LinearLayout)findViewById(R.id.loginActivityView);
+        final EditText inputName = (EditText) findViewById(R.id.name);
+        final EditText inputPassword = (EditText) findViewById(R.id.password);
+        final Button btnLogin = (Button) findViewById(R.id.btnLogin);
+        final TextView btnLinkToRegister = (TextView) findViewById(R.id.btnLinkToRegisterScreen);
+        final LinearLayout rootView = (LinearLayout)findViewById(R.id.loginActivityView);
 
         // 공백을 클릭시 EditText의 focus와 자판이 사라지게 하기
         rootView.setOnTouchListener(new View.OnTouchListener() {
@@ -66,17 +61,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // RegisterActivity이후에 빈칸에 세팅
+        // RegisterActivity 로부터 회원가입이 성공하면 빈칸에 세팅
         Intent fromRegisterIntent = getIntent();
-        String fromRegisterEmail = fromRegisterIntent.getStringExtra("email");
+        String fromRegisterName = fromRegisterIntent.getStringExtra("name");
         String fromRegisterPwd = fromRegisterIntent.getStringExtra("password");
         role = fromRegisterIntent.getIntExtra("role",0);
 
-        if(fromRegisterEmail !=null && fromRegisterPwd != null){
-            inputEmail.setText(fromRegisterEmail);
+        if(fromRegisterName !=null && fromRegisterPwd != null){
+            inputName.setText(fromRegisterName);
             inputPassword.setText(fromRegisterPwd);
         }
-
 
         // Progress dialog
         mDialogHelper = new DialogHelper(this);
@@ -90,37 +84,35 @@ public class LoginActivity extends AppCompatActivity {
             // get user data from session
             HashMap<String, String> user = mSessionManager.getUserDetails();
             HashMap<String, Integer> userRole = mSessionManager.getUserRole();
-            String yourEmail  = user.get(SessionManager.KEY_YOUR_EMAIL);
-
-
+            String yourName  = user.get(SessionManager.KEY_YOUR_EMAIL);
 
             int roleFromSession = userRole.get(SessionManager.KEY_YOUR_ROLE);
-            // 이미 로그인이 되어있으면 HomeActivity로
+            // 이미 로그인이 되어있으면 HomeActivity launch
             if(roleFromSession == 0){
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("yourId",yourEmail);
+                intent.putExtra("yourId",yourName);
                 startActivity(intent);
                 finish();
             }else if(roleFromSession == 1){
                 Intent intent = new Intent(LoginActivity.this, MainActivityDoctor.class);
-                intent.putExtra("yourId",yourEmail);
+                intent.putExtra("yourId",yourName);
                 startActivity(intent);
                 finish();
             }
 
         }
 
-        // Login button Click Event
+        // 로그인
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-                String email = inputEmail.getText().toString();
+                String name = inputName.getText().toString();
                 String password = inputPassword.getText().toString();
 
-                // Check for empty data in the form
-                if (email.trim().length() > 0 && password.trim().length() > 0) {
+                // 빈칸 확인
+                if (name.trim().length() > 0 && password.trim().length() > 0) {
                     // login user
-                    checkLogin(email, password);
+                    checkLogin(name, password);
                 } else {
                     // Prompt user to enter credentials
                     Toast.makeText(LoginActivity.this,
@@ -142,18 +134,18 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-    /**
-     * function to verify login details in mysql db
-     * */
-    private void checkLogin(final String email, final String password) {
 
-        String tag_string_req = "req_login";
+    /**
+     * DB 회원정보와 일치 여부 check
+     * @param name
+     * @param password
+     */
+    private void checkLogin(final String name, final String password) {
 
         mDialogHelper.showPdialog("PLEASE WAIT...", false);
 
-
         StringRequest strReq = new StringRequest(Request.Method.POST,
-                NetworkConfig.URL_REGISTER, new Response.Listener<String>() {
+                NetworkConfig.URL_ACCOUNT, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -164,28 +156,26 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
 
-
                     // 로그인 에러 체크
                     if (!error) {
-                        // user successfully logged in
+                        // User successfully logged in
                         // Create login session
-                        JSONObject jObjUser = jObj.getJSONObject("user");
-                        String r = jObjUser.getString("role");
+                        String r = jObj.getString("role");
                         role = Integer.parseInt(r);
-                        mSessionManager.setLogin(true, email, role);
+                        mSessionManager.setLogin(true, name, role);
 
                         if(role == 0){
                             // Launch main activity
                             Intent intent = new Intent(LoginActivity.this,
                                     MainActivity.class);
-                            intent.putExtra("yourId", email);
+                            intent.putExtra("yourId", name);
                             startActivity(intent);
                             finish();
                         }else if(role == 1){
                             // Launch main activity
                             Intent intent = new Intent(LoginActivity.this,
                                     MainActivityDoctor.class);
-                            intent.putExtra("yourId", email);
+                            intent.putExtra("yourId", name);
                             startActivity(intent);
                             finish();
                         }
@@ -218,7 +208,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Posting parameters to login url
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("tag", "login");
-                params.put("email", email);
+                params.put("name", name);
                 params.put("password", password);
                 params.put("role", role+"");
 
@@ -228,6 +218,6 @@ public class LoginActivity extends AppCompatActivity {
         };
 
         // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+        AppController.getInstance().addToRequestQueue(strReq, TAG);
     }
 }
