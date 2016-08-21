@@ -34,8 +34,6 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".login.RegisterActivity" />
         <activity android:name=".MainActivityDoctor" />
-        <activity android:name=".SubActivity" />
-        <activity android:name=".SubActivityDoctor"></activity>
 
         <receiver android:name="com.pure.gothic.hackathon.idhackandroid.SMSBroadCast">
             <intent-filter android:priority="1000">

@@ -40,7 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChatBubbleActivityForPatient extends Activity {
-    private static final String TAG = "ChatActivity";
+    private static final String TAG = ChatBubbleActivityForPatient.class.getSimpleName();
 
     private ChatArrayAdapter chatArrayAdapter;
     private ListView listView;
@@ -84,7 +84,7 @@ public class ChatBubbleActivityForPatient extends Activity {
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                sendChatMessage();
+                //sendChatMessage();
             }
         });
 
@@ -99,7 +99,7 @@ public class ChatBubbleActivityForPatient extends Activity {
             }
         });
 
-        requestByVolley();
+        //requestByVolley();
     }
 
     @Override
