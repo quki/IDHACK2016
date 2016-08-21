@@ -37,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private DialogHelper mDialogHelper;
     private int role;
+    private final static String POST_TAG_REGISTER = "register";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
         final CheckBox askDoctor = (CheckBox) findViewById(R.id.askDoctor);
         askDoctor.setChecked(false);
 
-        // 공백 클릭시 EditText의 focus와 자판이 사라지게 하기
+        // Hide keyboard when user touch empty view
         rootView.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
@@ -63,16 +64,16 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        // 의사 인지 여부 check box toggle
+        // Check box toggle if doctor or not
         askDoctor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     role = 1;
-                    Toast.makeText(getApplicationContext(), role + "", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "YOU ARE DOCTOR", Toast.LENGTH_SHORT).show();
                 } else {
                     role = 0;
-                    Toast.makeText(getApplicationContext(), role + "", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "YOU ARE PATIENT", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -83,24 +84,23 @@ public class RegisterActivity extends AppCompatActivity {
         // Session manager
         SessionManager mSessionManager = new SessionManager(getApplicationContext());
 
-        // 유저가 한번 로그인 했었는지 체크
+        // Session check user already login
         if (mSessionManager.isLoggedIn()) {
 
-            // 유저가 이미 로그인 했었을 때...
             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
 
-        // 회원가입
+        // Register user account
         btnRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 String name = inputName.getText().toString();
                 String password = inputPassword.getText().toString();
                 String passwordCheck = inputPasswordCheck.getText().toString();
-                // 이름에 공백유무 확인
+
                 if (name.trim().length() > 0 && password.trim().length() > 0 && passwordCheck.trim().length() > 0) {
-                    // 비밀번호 일치여부 확인
+                    // check password equal to password check filed
                     if (password.equals(passwordCheck)) {
                         registerUser(name, password);
                     } else {
@@ -113,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        // Login 화면으로 전환
+        // Launch LoginActivity
         btnLinkToLogin.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
@@ -126,11 +126,12 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     /**
-     * DB에 회원 정보 insert, POST 방식
-     * @param name 회원이름(ID)
-     * @param password 비밀번호
+     * Insert user account to table name 'Account'
+     * POST
+     * @param userId user phone number
+     * @param password user password
      */
-    private void registerUser(final String name, final String password) {
+    private void registerUser(final String userId, final String password) {
 
         mDialogHelper.showPdialog("PLEASE WAIT...", false);
 
@@ -146,22 +147,18 @@ public class RegisterActivity extends AppCompatActivity {
                             JSONObject jObj = new JSONObject(response);
                             boolean error = jObj.getBoolean("error");
 
-                            // 회원 정보 DB insert success
+                            // Insert success
                             if (!error) {
                                 // Launch login activity
                                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                intent.putExtra("name", name);
+                                intent.putExtra("userId", userId);
                                 intent.putExtra("password", password);
                                 intent.putExtra("role", role);
                                 startActivity(intent);
                                 finish();
 
-                                Toast.makeText(RegisterActivity.this, "COMPLETE",
-                                        Toast.LENGTH_LONG).show();
-
-                            // 회원 정보 DB insert fail
+                            // Insert fail
                             } else {
-
                                 String errorMsg = jObj.getString("error_msg");
                                 if (errorMsg.equals("User already existed")) {
                                     Toast.makeText(RegisterActivity.this,
@@ -192,8 +189,8 @@ public class RegisterActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 // Posting params to register url
                 Map<String, String> params = new HashMap<>();
-                params.put("tag", "register");
-                params.put("name", name);
+                params.put("tag", POST_TAG_REGISTER);
+                params.put("name", userId);
                 params.put("password", password);
                 params.put("role", role + "");
                 return params;

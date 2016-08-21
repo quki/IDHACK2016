@@ -18,13 +18,14 @@ import android.widget.Toast;
 import com.pure.gothic.hackathon.idhackandroid.login.LoginActivity;
 import com.pure.gothic.hackathon.idhackandroid.login.SessionManager;
 
-// jae, lemonhall2, CYhan, gon, quki
+/**
+ * contribute
+ * jae, lemonhall2, CYhan, gon, quki
+ */
 public class MainActivity extends AppCompatActivity {
 
-
-    String yourId;
+    private String userId;
     private SessionManager session;
-    private Toolbar mToolbar;
     private EditText otherPhone;
     private Button requestBtn;
 
@@ -33,40 +34,39 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         otherPhone = (EditText) findViewById(R.id.otherPhone);
         requestBtn = (Button) findViewById(R.id.requestBtn);
         requestBtn.setEnabled(false);
         setSupportActionBar(mToolbar);
 
         Intent intent = getIntent();
-        yourId = intent.getStringExtra("yourId");
+        userId = intent.getStringExtra("userId");
 
-        if (yourId != null) {
-            setTitle(yourId);
+        if (userId != null) {
+            setTitle(userId);
         } else {
             Toast.makeText(this, "LOGIN ERROR", Toast.LENGTH_SHORT).show();
-            logoutUser();
+            signOut();
         }
 
         // Session Manager
         session = new SessionManager(getApplicationContext());
 
         if (!session.isLoggedIn()) {
-            logoutUser();
+            signOut();
         }
         otherPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length() != 0){
+                if (s.length() != 0) {
                     requestBtn.setEnabled(true);
-                }else{
+                } else {
                     requestBtn.setEnabled(false);
                 }
             }
@@ -80,37 +80,30 @@ public class MainActivity extends AppCompatActivity {
         requestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this,ChatBubbleActivityForPatient.class);
-                i.putExtra("send_num",otherPhone.getText().toString());
-                i.putExtra("num",yourId);
+                Intent i = new Intent(MainActivity.this, ChatBubbleActivityForPatient.class);
+                i.putExtra("send_num", otherPhone.getText().toString());
+                i.putExtra("num", userId);
                 startActivity(i);
             }
         });
     }
 
-    private void logoutUser() {
-        session.setLogin(false, yourId, 0);
+    private void signOut() {
+        session.setLogin(false, userId, 0);
         // Launching the login activity
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
 
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.logOut) {
 
@@ -123,8 +116,7 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton("SIGN OUT", new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            //로그아웃
-                            logoutUser();
+                            signOut();
 
                         }
                     }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

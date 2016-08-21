@@ -33,12 +33,11 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
-    // LogCat tag
     private static final String TAG = LoginActivity.class.getSimpleName();
     private DialogHelper mDialogHelper;
     private SessionManager mSessionManager;
     private int role;
-
+    private final static String POST_TAG_LOGIN = "login";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         final TextView btnLinkToRegister = (TextView) findViewById(R.id.btnLinkToRegisterScreen);
         final LinearLayout rootView = (LinearLayout)findViewById(R.id.loginActivityView);
 
-        // 공백을 클릭시 EditText의 focus와 자판이 사라지게 하기
+        // Hide keyboard when user touch empty view
         rootView.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
@@ -61,14 +60,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // RegisterActivity 로부터 회원가입이 성공하면 빈칸에 세팅
+        // If user account register success fill account to blank by auto from RegisterActivity
         Intent fromRegisterIntent = getIntent();
-        String fromRegisterName = fromRegisterIntent.getStringExtra("name");
+        String fromRegisterID = fromRegisterIntent.getStringExtra("userId");
         String fromRegisterPwd = fromRegisterIntent.getStringExtra("password");
         role = fromRegisterIntent.getIntExtra("role",0);
 
-        if(fromRegisterName !=null && fromRegisterPwd != null){
-            inputName.setText(fromRegisterName);
+        if(fromRegisterID !=null && fromRegisterPwd != null){
+            inputName.setText(fromRegisterID);
             inputPassword.setText(fromRegisterPwd);
         }
 
@@ -78,38 +77,37 @@ public class LoginActivity extends AppCompatActivity {
         // Session manager
         mSessionManager = new SessionManager(getApplicationContext());
 
-        // 로그인 한지 안한지 체크
+        // Session check user already login
         if (mSessionManager.isLoggedIn()) {
 
             // get user data from session
             HashMap<String, String> user = mSessionManager.getUserDetails();
             HashMap<String, Integer> userRole = mSessionManager.getUserRole();
-            String yourName  = user.get(SessionManager.KEY_YOUR_EMAIL);
+            String userId  = user.get(SessionManager.KEY_USER_ID);
 
             int roleFromSession = userRole.get(SessionManager.KEY_YOUR_ROLE);
-            // 이미 로그인이 되어있으면 HomeActivity launch
+            // If already login, launch HomeActivity
             if(roleFromSession == 0){
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("yourId",yourName);
+                intent.putExtra("userId",userId);
                 startActivity(intent);
                 finish();
             }else if(roleFromSession == 1){
                 Intent intent = new Intent(LoginActivity.this, MainActivityDoctor.class);
-                intent.putExtra("yourId",yourName);
+                intent.putExtra("userId",userId);
                 startActivity(intent);
                 finish();
             }
 
         }
 
-        // 로그인
+        // Login
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
                 String name = inputName.getText().toString();
                 String password = inputPassword.getText().toString();
 
-                // 빈칸 확인
                 if (name.trim().length() > 0 && password.trim().length() > 0) {
                     // login user
                     checkLogin(name, password);
@@ -136,11 +134,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * DB 회원정보와 일치 여부 check
-     * @param name
+     * Check account with table 'Account'
+     * POST
+     * @param userId
      * @param password
      */
-    private void checkLogin(final String name, final String password) {
+    private void checkLogin(final String userId, final String password) {
 
         mDialogHelper.showPdialog("PLEASE WAIT...", false);
 
@@ -156,39 +155,35 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
 
-                    // 로그인 에러 체크
                     if (!error) {
                         // User successfully logged in
                         // Create login session
                         String r = jObj.getString("role");
                         role = Integer.parseInt(r);
-                        mSessionManager.setLogin(true, name, role);
+                        mSessionManager.setLogin(true, userId, role);
 
                         if(role == 0){
-                            // Launch main activity
+                            // Launch MainActivity
                             Intent intent = new Intent(LoginActivity.this,
                                     MainActivity.class);
-                            intent.putExtra("yourId", name);
+                            intent.putExtra("userId", userId);
                             startActivity(intent);
                             finish();
                         }else if(role == 1){
-                            // Launch main activity
+                            // Launch MainActivity(Doctor)
                             Intent intent = new Intent(LoginActivity.this,
                                     MainActivityDoctor.class);
-                            intent.putExtra("yourId", name);
+                            intent.putExtra("userId", userId);
                             startActivity(intent);
                             finish();
                         }
 
-
                     } else {
-                        // Error in login. Get the error message
                         String errorMsg = jObj.getString("error_msg");
                         Toast.makeText(LoginActivity.this,"INCORRECT ACCOUNT"
                                 , Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
-                    // JSON error
                     e.printStackTrace();
                 }
 
@@ -207,8 +202,8 @@ public class LoginActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 // Posting parameters to login url
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("tag", "login");
-                params.put("name", name);
+                params.put("tag", POST_TAG_LOGIN);
+                params.put("name", userId);
                 params.put("password", password);
                 params.put("role", role+"");
 

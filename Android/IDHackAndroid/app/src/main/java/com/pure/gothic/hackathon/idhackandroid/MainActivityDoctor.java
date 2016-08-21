@@ -20,7 +20,7 @@ import com.pure.gothic.hackathon.idhackandroid.login.SessionManager;
 
 public class MainActivityDoctor extends AppCompatActivity {
 
-    String yourId;
+    private String userId;
     private SessionManager session;
     private Toolbar mToolbar;
     private EditText otherPhone;
@@ -38,10 +38,10 @@ public class MainActivityDoctor extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
         Intent intent = getIntent();
-        yourId = intent.getStringExtra("yourId");
+        userId = intent.getStringExtra("userId");
 
-        if (yourId != null){
-            setTitle(yourId);
+        if (userId != null){
+            setTitle(userId);
         }else {
             Toast.makeText(this, "LOGIN ERROR", Toast.LENGTH_SHORT).show();
             logoutUser();
@@ -81,13 +81,13 @@ public class MainActivityDoctor extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(MainActivityDoctor.this, ChatBubbleActivityForDoctor.class);
                 i.putExtra("send_num", otherPhone.getText().toString());
-                i.putExtra("num", yourId);
+                i.putExtra("num", userId);
                 startActivity(i);
             }
         });
     }
     private void logoutUser() {
-        session.setLogin(false, yourId, 1);
+        session.setLogin(false, userId, 1);
         // Launching the login activity
         Intent intent = new Intent(MainActivityDoctor.this, LoginActivity.class);
         startActivity(intent);
