@@ -1,4 +1,4 @@
-package com.pure.gothic.hackathon.idhackandroid;
+package com.pure.gothic.hackathon.idhackandroid.chat;
 
 import android.util.Log;
 

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "128076881738",
+    "firebase_url": "https://medichat-d5712.firebaseio.com",
+    "project_id": "medichat-d5712",
+    "storage_bucket": "medichat-d5712.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128076881738:android:e04c1b5f497a7120",
+        "android_client_info": {
+          "package_name": "com.pure.gothic.hackathon.idhackandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "128076881738-ae7o2jbof6micdg4gmt9mjejtjr1svag.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj5Sgkhr8w8e2EuE4BYjaJLtNvD2VZESg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
