@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() != 0) {
+                if (s.toString().trim().length() > 0) {
                     requestBtn.setEnabled(true);
                 } else {
                     requestBtn.setEnabled(false);
@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, ChatBubbleActivityForPatient.class);
-                i.putExtra("send_num", otherPhone.getText().toString());
-                i.putExtra("num", userId);
+                i.putExtra("sender", userId);
+                i.putExtra("receiver", otherPhone.getText().toString());
                 startActivity(i);
             }
         });

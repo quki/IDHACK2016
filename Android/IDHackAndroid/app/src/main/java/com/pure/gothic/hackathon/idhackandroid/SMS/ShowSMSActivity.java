@@ -1,4 +1,4 @@
-package com.pure.gothic.hackathon.idhackandroid;
+package com.pure.gothic.hackathon.idhackandroid.SMS;
 
 /**
  * Created by SAMSUNG on 2016-02-13.
@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.pure.gothic.hackathon.idhackandroid.R;
 
 public class ShowSMSActivity extends Activity {
 

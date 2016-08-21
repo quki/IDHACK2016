@@ -63,7 +63,7 @@ public class MainActivityDoctor extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length() != 0){
+                if(s.toString().trim().length() != 0){
                     requestBtn.setEnabled(true);
                 }else{
                     requestBtn.setEnabled(false);
@@ -80,8 +80,8 @@ public class MainActivityDoctor extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivityDoctor.this, ChatBubbleActivityForDoctor.class);
-                i.putExtra("send_num", otherPhone.getText().toString());
-                i.putExtra("num", userId);
+                i.putExtra("sender", userId);
+                i.putExtra("receiver", otherPhone.getText().toString());
                 startActivity(i);
             }
         });
@@ -96,16 +96,12 @@ public class MainActivityDoctor extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_doc, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.logOut) {
 
@@ -118,7 +114,6 @@ public class MainActivityDoctor extends AppCompatActivity {
                     .setPositiveButton("SIGN OUT", new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            //로그아웃
                             logoutUser();
 
                         }

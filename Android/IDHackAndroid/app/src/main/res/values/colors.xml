@@ -7,6 +7,10 @@
     <color name="mainblue">#2196F3</color>
     <color name="mainblue_dark">#1976D2</color>
 
+    <!--background-->
+    <color name="doctor_bg_color">#ff7ca5</color>
+    <color name="patient_bg_color">#82a1ff</color>
+
     <!--login-->
     <color name="bg_login">#dd3dff</color>
     <color name="bg_edittext_login">#ebb1ff</color>
@@ -18,9 +22,7 @@
     <!-- clickstate -->
     <color name="clickstate">#C5CAE9</color>
     <color name="shadow">#32000000</color>
-
-    <color name="doctor_bg_color">#ff7ca5</color>
-    <color name="patient_bg_color">#82a1ff</color>
+    <color name="disable">#de07060a</color>
 
 
 </resources>

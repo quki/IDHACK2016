@@ -2,36 +2,45 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@color/doctor_bg_color">
-    <ListView android:id="@+id/listView1"
+    android:background="@color/doctor_bg_color"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="80dp"
-        android:divider="#00000000"/>
-    <RelativeLayout android:id="@+id/form"
+        android:divider="#00000000" />
+
+    <RelativeLayout
+        android:id="@+id/form"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:orientation="vertical">
-        <EditText android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:ems="10"
+
+        <EditText
             android:id="@+id/chatText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/buttonSend" />
-        <Button android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Send"
+            android:layout_toLeftOf="@+id/buttonSend"
+            android:ems="10"
+            android:inputType="textMultiLine" />
+
+        <Button
             android:id="@+id/buttonSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/chatText"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:background="@drawable/button_login"
-            android:textColor="@color/doctor_bg_color"/>
+            android:enabled="false"
+            android:text="Send"
+            android:textColor="@color/doctor_bg_color" />
     </RelativeLayout>
 </RelativeLayout>

@@ -10,6 +10,8 @@ import android.content.IntentFilter;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -18,36 +20,17 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.StringRequest;
-import com.pure.gothic.hackathon.idhackandroid.volley.AppController;
-import com.pure.gothic.hackathon.idhackandroid.volley.NetworkConfig;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
+import com.pure.gothic.hackathon.idhackandroid.adapter.ChatArrayAdapter;
 
 public class ChatBubbleActivityForDoctor extends Activity {
     private static final String TAG = ChatBubbleActivityForDoctor.class.getSimpleName();
-    Context mContext;
     private ChatArrayAdapter chatArrayAdapter;
     private ListView listView;
     private EditText chatText;
     private Button buttonSend;
-    private String sendNum;
-    private String num;
-    Intent intent;
+    private String receiver;
+    private String sender;
     private boolean side = false;
 
     @Override
@@ -56,19 +39,40 @@ public class ChatBubbleActivityForDoctor extends Activity {
         setContentView(R.layout.activity_chat_bubble_for_doctor);
 
 
-        intent = getIntent();
-        sendNum = intent.getStringExtra("send_num");
-        num = intent.getStringExtra("num");
+        Intent i= getIntent();
+        receiver = i.getStringExtra("receiver");
+        sender = i.getStringExtra("sender");
 
 
         buttonSend = (Button) findViewById(R.id.buttonSend);
 
         listView = (ListView) findViewById(R.id.listView1);
 
-        chatArrayAdapter = new ChatArrayAdapter(getApplicationContext(), R.layout.activity_chat_message);
+        chatArrayAdapter = new ChatArrayAdapter(getApplicationContext(), R.layout.item_message);
         listView.setAdapter(chatArrayAdapter);
 
         chatText = (EditText) findViewById(R.id.chatText);
+        chatText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().trim().length() != 0){
+                    buttonSend.setEnabled(true);
+                }else{
+                    buttonSend.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         chatText.setOnKeyListener(new OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
@@ -94,7 +98,6 @@ public class ChatBubbleActivityForDoctor extends Activity {
                 listView.setSelection(chatArrayAdapter.getCount() - 1);
             }
         });
-        //requestByVolley();
     }
 
 
@@ -106,8 +109,8 @@ public class ChatBubbleActivityForDoctor extends Activity {
         /*chatArrayAdapter.add(new ChatMessage("true", sendNum, msg));*/
         chatText.setText("");
 
-        if (sendNum.length() > 0 && msg.length() > 0) {
-            sendSMS(sendNum, msg);
+        if (receiver.length() > 0 && msg.length() > 0) {
+            //sendSMS(receiver, msg);
             Log.d("test1", "xml정보보냄 sendSMS()로");
         } else {
         }
