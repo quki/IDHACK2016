@@ -26,5 +26,6 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile files('libs/volley.jar')
     compile 'com.google.firebase:firebase-database:9.2.1'
+    compile 'com.firebase:firebase-client-android:2.5.2+'
 }
 apply plugin: 'com.google.gms.google-services'
