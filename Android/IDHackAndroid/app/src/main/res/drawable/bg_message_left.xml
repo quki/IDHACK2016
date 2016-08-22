@@ -3,7 +3,7 @@
     android:shape="rectangle" >
 
     <!-- view background color -->
-    <solid android:color="@color/bg_msg_from" >
+    <solid android:color="@color/chat_message_left" >
     </solid>
 
     <corners android:radius="5dp" >

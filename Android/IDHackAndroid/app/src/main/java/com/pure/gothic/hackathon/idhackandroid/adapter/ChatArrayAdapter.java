@@ -2,6 +2,8 @@ package com.pure.gothic.hackathon.idhackandroid.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import com.pure.gothic.hackathon.idhackandroid.R;
 import com.pure.gothic.hackathon.idhackandroid.chat.ChatConfig;
 import com.pure.gothic.hackathon.idhackandroid.chat.ChatData;
+import com.pure.gothic.hackathon.idhackandroid.chat.RoleConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,21 +47,34 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatData> {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
-        if (row == null) {
-            LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflater.inflate(R.layout.item_message, parent, false);
-        }
-        singleMessageContainer = (LinearLayout) row.findViewById(R.id.singleMessageContainer);
         ChatData chatData = getItem(position);
-        singleMessage = (TextView) row.findViewById(R.id.singleMessage);
-        singleMessage.setText(chatData.getText());
+        LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        singleMessage.setBackground(chatData.getStatus() == ChatConfig.LEFT_BUBBLE ? ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.textview_left, null) : ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.textview_right, null));
-        singleMessage.setTextColor(chatData.getStatus() == ChatConfig.LEFT_BUBBLE  ? Color.parseColor("#4c4c4c") : Color.parseColor("#4c4c4c"));
+        if (chatData.getStatus() == ChatConfig.LEFT_BUBBLE) {
+            convertView = inflater.inflate(R.layout.item_message_left, parent, false);
+        } else if (chatData.getStatus() == ChatConfig.RIGHT_BUBBLE) {
+            convertView = inflater.inflate(R.layout.item_message_right, parent, false);
+        }
+        TextView label = (TextView) convertView.findViewById(R.id.label);
+        TextView message = (TextView) convertView.findViewById(R.id.message);
+        label.setText(chatData.getRoleToString());
+        message.setText(chatData.getText());
 
-        singleMessageContainer.setGravity(chatData.getStatus() == ChatConfig.LEFT_BUBBLE ? Gravity.LEFT : Gravity.RIGHT);
-        return row;
+        if(chatData.getStatus() == ChatConfig.RIGHT_BUBBLE){
+            switch (chatData.getRole()) {
+                case RoleConfig.ROLE_PATIENT: {
+                    message.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.bg_message_patient, null));
+                    break;
+                }
+                case RoleConfig.ROLE_DOCTOR: {
+                    message.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.bg_message_doctor, null));
+                    break;
+                }
+            }
+        }
+
+
+        return convertView;
     }
 
 }

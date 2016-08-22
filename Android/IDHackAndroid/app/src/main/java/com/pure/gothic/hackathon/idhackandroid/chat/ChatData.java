@@ -12,11 +12,13 @@ public class ChatData {
     private String text;
     private String key;
     private int status;
+    private int role;
 
-    public ChatData(){
+    public ChatData() {
 
     }
-    public ChatData(String sender, String receiver, String text, String key){
+
+    public ChatData(String sender, String receiver, String text, String key) {
         this.sender = sender;
         this.receiver = receiver;
         this.text = text;
@@ -38,12 +40,16 @@ public class ChatData {
         this.text = text;
     }
 
-    public void setKey(String key){
+    public void setKey(String key) {
         this.key = key;
     }
 
-    public void setStatus(int status){
+    public void setStatus(int status) {
         this.status = status;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
     }
 
     /**
@@ -65,8 +71,20 @@ public class ChatData {
         return key;
     }
 
-    public int getStatus(){
+    public int getStatus() {
         return status;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public String getRoleToString(){
+        if(role == RoleConfig.ROLE_PATIENT){
+            return "Patient";
+        }else{
+            return "Doctor";
+        }
     }
 
 

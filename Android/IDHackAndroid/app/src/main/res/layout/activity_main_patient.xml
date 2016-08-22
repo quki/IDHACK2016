@@ -9,15 +9,6 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar_patient" />
 
-    <TextView
-        android:id="@+id/role"
-        android:text="Hello, Customer"
-        android:gravity="center_horizontal"
-        android:textSize="20sp"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"/>
     <EditText
         android:id="@+id/otherPhone"
         android:layout_centerInParent="true"
