@@ -2,7 +2,9 @@ package com.pure.gothic.hackathon.idhackandroid.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -70,9 +72,13 @@ public class RegisterActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     role = 1;
+                    rootView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.doctor_bg_color));
+                    btnRegister.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.doctor_bg_color));
                     Toast.makeText(getApplicationContext(), "YOU ARE DOCTOR", Toast.LENGTH_SHORT).show();
                 } else {
                     role = 0;
+                    rootView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.patient_bg_color));
+                    btnRegister.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.patient_bg_color));
                     Toast.makeText(getApplicationContext(), "YOU ARE PATIENT", Toast.LENGTH_SHORT).show();
                 }
             }

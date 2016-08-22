@@ -1,4 +1,4 @@
-package com.pure.gothic.hackathon.idhackandroid.SMS;
+package com.pure.gothic.hackathon.idhackandroid.sms;
 
 /**
  * Created by SAMSUNG on 2016-02-13.

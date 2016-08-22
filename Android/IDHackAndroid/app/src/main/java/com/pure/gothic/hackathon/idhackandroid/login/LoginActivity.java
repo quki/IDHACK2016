@@ -3,6 +3,7 @@ package com.pure.gothic.hackathon.idhackandroid.login;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -36,18 +37,23 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = LoginActivity.class.getSimpleName();
     private DialogHelper mDialogHelper;
     private SessionManager mSessionManager;
-    private int role;
+    private int role = 999; //default
     private final static String POST_TAG_LOGIN = "login";
+    private LinearLayout rootView;
+    private EditText inputName;
+    private EditText inputPassword;
+    private Button btnLogin;
+    private TextView btnLinkToRegister;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        final EditText inputName = (EditText) findViewById(R.id.name);
-        final EditText inputPassword = (EditText) findViewById(R.id.password);
-        final Button btnLogin = (Button) findViewById(R.id.btnLogin);
-        final TextView btnLinkToRegister = (TextView) findViewById(R.id.btnLinkToRegisterScreen);
-        final LinearLayout rootView = (LinearLayout)findViewById(R.id.loginActivityView);
+        inputName = (EditText) findViewById(R.id.name);
+        inputPassword = (EditText) findViewById(R.id.password);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnLinkToRegister = (TextView) findViewById(R.id.btnLinkToRegisterScreen);
+        rootView = (LinearLayout)findViewById(R.id.loginActivityView);
 
         // Hide keyboard when user touch empty view
         rootView.setOnTouchListener(new View.OnTouchListener() {
@@ -59,17 +65,6 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        // If user account register success fill account to blank by auto from RegisterActivity
-        Intent fromRegisterIntent = getIntent();
-        String fromRegisterID = fromRegisterIntent.getStringExtra("userId");
-        String fromRegisterPwd = fromRegisterIntent.getStringExtra("password");
-        role = fromRegisterIntent.getIntExtra("role",0);
-
-        if(fromRegisterID !=null && fromRegisterPwd != null){
-            inputName.setText(fromRegisterID);
-            inputPassword.setText(fromRegisterPwd);
-        }
 
         // Progress dialog
         mDialogHelper = new DialogHelper(this);
@@ -131,6 +126,28 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // If user account register success fill account to blank by auto from RegisterActivity
+        Intent fromRegisterIntent = getIntent();
+        String fromRegisterID = fromRegisterIntent.getStringExtra("userId");
+        String fromRegisterPwd = fromRegisterIntent.getStringExtra("password");
+        role = fromRegisterIntent.getIntExtra("role",999);
+
+        if(fromRegisterID !=null && fromRegisterPwd != null){
+            inputName.setText(fromRegisterID);
+            inputPassword.setText(fromRegisterPwd);
+        }
+        if(role == 0){
+            rootView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.patient_bg_color));
+            btnLogin.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.patient_bg_color));
+        }else if(role == 1){
+            rootView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.doctor_bg_color));
+            btnLogin.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.doctor_bg_color));
+        }
     }
 
     /**

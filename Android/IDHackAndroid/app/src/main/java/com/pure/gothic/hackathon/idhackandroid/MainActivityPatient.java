@@ -56,6 +56,8 @@ public class MainActivityPatient extends AppCompatActivity {
         if (!session.isLoggedIn()) {
             signOut();
         }
+
+        // Enter receiver phone number
         otherPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -77,6 +79,7 @@ public class MainActivityPatient extends AppCompatActivity {
             }
         });
 
+        // Launch chat activity
         requestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

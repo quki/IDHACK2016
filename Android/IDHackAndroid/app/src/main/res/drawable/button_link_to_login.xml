@@ -9,7 +9,7 @@
     <item>
         <shape>
             <corners android:radius="2dp" />
-            <solid android:color="@color/bg_login" />
+            <solid android:color="@color/transparent" />
         </shape>
     </item>
 </selector>
