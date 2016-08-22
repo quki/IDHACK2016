@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.os.Message;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,15 +22,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.pure.gothic.hackathon.idhackandroid.adapter.ChatArrayAdapter;
 import com.pure.gothic.hackathon.idhackandroid.chat.ChatConfig;
 import com.pure.gothic.hackathon.idhackandroid.chat.ChatData;
 import com.pure.gothic.hackathon.idhackandroid.dialog.DialogHelper;
+
+import java.util.Arrays;
 
 public class ChatBubbleActivityForPatient extends Activity {
     private static final String TAG = ChatBubbleActivityForPatient.class.getSimpleName();
@@ -38,7 +45,7 @@ public class ChatBubbleActivityForPatient extends Activity {
     private ListView listView;
     private EditText chatText;
     private Button buttonSend;
-    private String receiver,sender;
+    private String receiver, sender, key;
     private boolean side = false;
 
     DialogHelper mDialogHelper;
@@ -51,12 +58,14 @@ public class ChatBubbleActivityForPatient extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_bubble_for_patient);
+        Firebase.setAndroidContext(this);
+
         mDialogHelper = new DialogHelper(this);
 
         Intent i = getIntent();
         receiver = i.getStringExtra("receiver");
         sender = i.getStringExtra("sender");
-
+        key = makeKey(sender,receiver);
 
         buttonSend = (Button) findViewById(R.id.buttonSend);
 
@@ -75,9 +84,9 @@ public class ChatBubbleActivityForPatient extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.toString().trim().length() != 0){
+                if (s.toString().trim().length() != 0) {
                     buttonSend.setEnabled(true);
-                }else{
+                } else {
                     buttonSend.setEnabled(false);
                 }
             }
@@ -98,7 +107,7 @@ public class ChatBubbleActivityForPatient extends Activity {
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                ChatData chatData = new ChatData(sender, receiver, chatText.getText().toString(), ChatConfig.LEFT_BUBBLE);
+                ChatData chatData = new ChatData(sender, receiver, chatText.getText().toString(), key);
                 databaseReference.child("chatData").push().setValue(chatData);
                 chatText.setText("");
             }
@@ -115,8 +124,44 @@ public class ChatBubbleActivityForPatient extends Activity {
             }
         });
 
+        final Firebase ref = new Firebase("https://medichat-d5712.firebaseio.com/chatData");
+        com.firebase.client.Query queryRef = ref.orderByChild("key").equalTo(key);
+        queryRef.addChildEventListener(new com.firebase.client.ChildEventListener() {
+            @Override
+            public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+                Log.e("==onChildAdded==", "key: " + dataSnapshot.getKey() + " value " + dataSnapshot.getValue());
+                ChatData chatData = dataSnapshot.getValue(ChatData.class);
+                /*if (chatData.getReceiver().equals(receiver)) {
+                    chatArrayAdapter.add(chatData);
+                }*/
+                if(chatData.getSender().equals(sender)){
+                    chatData.setStatus(ChatConfig.RIGHT_BUBBLE);
+                }
+                chatArrayAdapter.add(chatData);
+            }
 
-        databaseReference.child("chatData").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildChanged(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(com.firebase.client.DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        /*databaseReference.child("chatData").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ChatData chatData = dataSnapshot.getValue(ChatData.class);
@@ -143,28 +188,29 @@ public class ChatBubbleActivityForPatient extends Activity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("onDestory()","브로드캐스트리시버 해제됨");
+        Log.d("onDestory()", "브로드캐스트리시버 해제됨");
     }
 
-    private boolean sendChatMessage(){
-        String msg =  chatText.getText().toString();
+    private boolean sendChatMessage() {
+        String msg = chatText.getText().toString();
         //insertByVolley(sender, receiver, msg, "0");
         chatText.setText("");
         //side = !side;
-        if (receiver.length()>0 && msg.length()>0){
+        if (receiver.length() > 0 && msg.length() > 0) {
             sendSMS(receiver, msg);
             Log.d("test1", "xml정보보냄 sendSMS()로");
-        }else{
+        } else {
         }
         return true;
     }
-    public void sendSMS(String smsNumber, String smsText){
+
+    public void sendSMS(String smsNumber, String smsText) {
         PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0, new Intent("android.provider.Telephony.SMS_RECEIVED"), 0);
         PendingIntent deliveredIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_DELIVERED_ACTION"), 0);
         Log.d("test1", "sendSMS()함수 내부작동");
@@ -206,4 +252,15 @@ public class ChatBubbleActivityForPatient extends Activity {
         mSmsManager.sendTextMessage(smsNumber, null, smsText, sentIntent, deliveredIntent);
     }
 
+    private String makeKey(String sender, String receiver) {
+
+        String userArray[] = {sender, receiver};
+        Arrays.sort(userArray);
+        StringBuffer sb = new StringBuffer();
+        for (String e : userArray) {
+            sb.append(e);
+        }
+        String key = sb.toString();
+        return key;
+    }
 }

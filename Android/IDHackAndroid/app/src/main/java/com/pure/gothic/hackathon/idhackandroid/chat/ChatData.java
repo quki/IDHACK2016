@@ -1,5 +1,7 @@
 package com.pure.gothic.hackathon.idhackandroid.chat;
 
+import java.util.Arrays;
+
 /**
  * Created by quki on 2016-08-21.
  */
@@ -8,16 +10,17 @@ public class ChatData {
     private String sender;
     private String receiver;
     private String text;
-    private int status; // status == 0 ? left : right
+    private String key;
+    private int status;
 
     public ChatData(){
 
     }
-    public ChatData(String sender, String receiver, String text, int status){
+    public ChatData(String sender, String receiver, String text, String key){
         this.sender = sender;
         this.receiver = receiver;
         this.text = text;
-        this.status = status;
+        this.key = key;
     }
 
     /**
@@ -34,7 +37,12 @@ public class ChatData {
     public void setText(String text) {
         this.text = text;
     }
-    public void setStatus(int status) {
+
+    public void setKey(String key){
+        this.key = key;
+    }
+
+    public void setStatus(int status){
         this.status = status;
     }
 
@@ -53,8 +61,13 @@ public class ChatData {
         return text;
     }
 
+    public String getKey() {
+        return key;
+    }
+
     public int getStatus(){
         return status;
     }
+
 
 }
