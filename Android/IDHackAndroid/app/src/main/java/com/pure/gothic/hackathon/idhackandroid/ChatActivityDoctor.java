@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.pure.gothic.hackathon.idhackandroid.adapter.ChatArrayAdapter;
 import com.pure.gothic.hackathon.idhackandroid.chat.ChatConfig;
 import com.pure.gothic.hackathon.idhackandroid.chat.ChatData;
+import com.pure.gothic.hackathon.idhackandroid.chat.RoleConfig;
 
 import java.util.Arrays;
 
@@ -52,11 +53,11 @@ public class ChatActivityDoctor extends Activity {
         key = makeKey(sender, receiver);
 
         buttonSend = (Button) findViewById(R.id.buttonSend);
-        listView = (ListView) findViewById(R.id.listView1);
+        listView = (ListView) findViewById(R.id.listView);
         chatText = (EditText) findViewById(R.id.chatText);
 
         // ListView and adapter
-        chatArrayAdapter = new ChatArrayAdapter(getApplicationContext(), R.layout.item_message);
+        chatArrayAdapter = new ChatArrayAdapter(getApplicationContext(), R.layout.item_message_right);
         listView.setAdapter(chatArrayAdapter);
         listView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         //to scroll the list view to bottom on data change
@@ -108,8 +109,14 @@ public class ChatActivityDoctor extends Activity {
             public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
                 Log.d(TAG, "key: " + dataSnapshot.getKey() + " value " + dataSnapshot.getValue());
                 ChatData chatData = dataSnapshot.getValue(ChatData.class);
+
+                // Set bubble position and role
                 if(chatData.getSender().equals(sender)){
                     chatData.setStatus(ChatConfig.RIGHT_BUBBLE);
+                    chatData.setRole(RoleConfig.ROLE_DOCTOR);
+                }else{
+                    chatData.setStatus(ChatConfig.LEFT_BUBBLE);
+                    chatData.setRole(RoleConfig.ROLE_PATIENT);
                 }
                 chatArrayAdapter.add(chatData);
             }

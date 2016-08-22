@@ -10,13 +10,15 @@
     <!--background-->
     <color name="doctor_bg_color">#ff7ca5</color>
     <color name="patient_bg_color">#82a1ff</color>
+    <color name="chat_bg">#fafaf0</color>
+    <color name="chat_message_left">#e5e7eb</color>
 
     <!--login-->
-    <color name="bg_login">#dd3dff</color>
+    <color name="bg_login">#c04dea</color>
     <color name="bg_edittext_login">#ebb1ff</color>
     <color name="input_login">#ffffff</color>
     <color name="input_login_hint">#ffffff</color>
-    <color name="btn_login_text">#dd3dff</color>
+    <color name="btn_login_text">#c04dea</color>
     <color name="btn_login_bg">#eceef1</color>
 
     <!-- clickstate -->
@@ -24,18 +26,8 @@
     <color name="shadow">#32000000</color>
     <color name="disable">#de07060a</color>
 
-    <color name="body_background">#e8e8e8</color>
-    <color name="body_background_green">#82e783</color>
-    <color name="server_status_bar">#2b2b2b</color>
-    <color name="title_gray">#434343</color>
-    <color name="bg_msg_you">#5eb964</color>
-    <color name="bg_msg_from">#e5e7eb</color>
-    <color name="msg_border_color">#a1a1a1</color>
-    <color name="bg_btn_join">#1e6258</color>
-    <color name="bg_msg_input">#e8e8e8</color>
-    <color name="text_msg_input">#626262</color>
-    <color name="lblFromName">#777777</color>
-
+    <color name="message_left">#434343</color>
+    <color name="label_color">#777777</color>
     <color name="transparent">#00ffffff</color>
 
 </resources>

@@ -15,7 +15,16 @@
         android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp">
-
+        <TextView
+            android:id="@+id/helloDoctor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="25dp"
+            android:gravity="center_horizontal"
+            android:visibility="invisible"
+            android:text="DOCTOR"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
         <EditText
             android:id="@+id/name"
             android:layout_width="fill_parent"

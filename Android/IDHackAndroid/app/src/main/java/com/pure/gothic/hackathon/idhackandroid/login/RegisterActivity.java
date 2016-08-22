@@ -30,6 +30,7 @@ import com.pure.gothic.hackathon.idhackandroid.volley.NetworkConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
         final TextView btnLinkToLogin = (TextView) findViewById(R.id.btnLinkToLoginScreen);
         final LinearLayout rootView = (LinearLayout) findViewById(R.id.registerActivityView);
         final CheckBox askDoctor = (CheckBox) findViewById(R.id.askDoctor);
+        final TextView helloDoctor = (TextView) findViewById(R.id.helloDoctor);
         askDoctor.setChecked(false);
 
         // Hide keyboard when user touch empty view
@@ -74,12 +76,12 @@ public class RegisterActivity extends AppCompatActivity {
                     role = 1;
                     rootView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.doctor_bg_color));
                     btnRegister.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.doctor_bg_color));
-                    Toast.makeText(getApplicationContext(), "YOU ARE DOCTOR", Toast.LENGTH_SHORT).show();
+                    helloDoctor.setVisibility(View.VISIBLE);
                 } else {
                     role = 0;
                     rootView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.patient_bg_color));
                     btnRegister.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.patient_bg_color));
-                    Toast.makeText(getApplicationContext(), "YOU ARE PATIENT", Toast.LENGTH_SHORT).show();
+                    helloDoctor.setVisibility(View.INVISIBLE);
                 }
             }
         });
