@@ -36,4 +36,6 @@
     <color name="text_msg_input">#626262</color>
     <color name="lblFromName">#777777</color>
 
+    <color name="transparent">#00ffffff</color>
+
 </resources>

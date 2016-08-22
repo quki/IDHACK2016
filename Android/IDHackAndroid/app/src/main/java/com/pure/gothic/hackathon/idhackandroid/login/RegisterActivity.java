@@ -2,7 +2,9 @@ package com.pure.gothic.hackathon.idhackandroid.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,7 +22,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.pure.gothic.hackathon.idhackandroid.MainActivity;
+import com.pure.gothic.hackathon.idhackandroid.MainActivityPatient;
 import com.pure.gothic.hackathon.idhackandroid.R;
 import com.pure.gothic.hackathon.idhackandroid.dialog.DialogHelper;
 import com.pure.gothic.hackathon.idhackandroid.volley.AppController;
@@ -70,9 +72,13 @@ public class RegisterActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     role = 1;
+                    rootView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.doctor_bg_color));
+                    btnRegister.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.doctor_bg_color));
                     Toast.makeText(getApplicationContext(), "YOU ARE DOCTOR", Toast.LENGTH_SHORT).show();
                 } else {
                     role = 0;
+                    rootView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.patient_bg_color));
+                    btnRegister.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.patient_bg_color));
                     Toast.makeText(getApplicationContext(), "YOU ARE PATIENT", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -87,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Session check user already login
         if (mSessionManager.isLoggedIn()) {
 
-            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+            Intent intent = new Intent(RegisterActivity.this, MainActivityPatient.class);
             startActivity(intent);
             finish();
         }

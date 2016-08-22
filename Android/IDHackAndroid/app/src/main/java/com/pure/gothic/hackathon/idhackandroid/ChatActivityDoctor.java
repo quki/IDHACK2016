@@ -13,49 +13,65 @@ import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.pure.gothic.hackathon.idhackandroid.adapter.ChatArrayAdapter;
+import com.pure.gothic.hackathon.idhackandroid.chat.ChatConfig;
+import com.pure.gothic.hackathon.idhackandroid.chat.ChatData;
 
-public class ChatBubbleActivityForDoctor extends Activity {
-    private static final String TAG = ChatBubbleActivityForDoctor.class.getSimpleName();
+import java.util.Arrays;
+
+public class ChatActivityDoctor extends Activity {
+    private static final String TAG = ChatActivityDoctor.class.getSimpleName();
     private ChatArrayAdapter chatArrayAdapter;
     private ListView listView;
     private EditText chatText;
     private Button buttonSend;
-    private String receiver;
-    private String sender;
-    private boolean side = false;
+    private String sender, receiver, key;
+
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = firebaseDatabase.getReference();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_bubble_for_doctor);
-
+        setContentView(R.layout.activity_chat_doctor);
+        Firebase.setAndroidContext(this);
 
         Intent i= getIntent();
         receiver = i.getStringExtra("receiver");
         sender = i.getStringExtra("sender");
-
+        key = makeKey(sender, receiver);
 
         buttonSend = (Button) findViewById(R.id.buttonSend);
-
         listView = (ListView) findViewById(R.id.listView1);
+        chatText = (EditText) findViewById(R.id.chatText);
 
+        // ListView and adapter
         chatArrayAdapter = new ChatArrayAdapter(getApplicationContext(), R.layout.item_message);
         listView.setAdapter(chatArrayAdapter);
+        listView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        //to scroll the list view to bottom on data change
+        chatArrayAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                listView.setSelection(chatArrayAdapter.getCount() - 1);
+            }
+        });
 
-        chatText = (EditText) findViewById(R.id.chatText);
+        // EditText, enter chat message
         chatText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
 
             }
 
@@ -73,29 +89,49 @@ public class ChatBubbleActivityForDoctor extends Activity {
 
             }
         });
-        chatText.setOnKeyListener(new OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    return sendChatMessage();
-                }
-                return false;
-            }
-        });
+
+        // Send to Firebase database
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                sendChatMessage();
+                ChatData chatData = new ChatData(sender, receiver, chatText.getText().toString(), key);
+                databaseReference.child("chatData").push().setValue(chatData);
+                chatText.setText("");
             }
         });
 
-        listView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-
-        //to scroll the list view to bottom on data change
-        chatArrayAdapter.registerDataSetObserver(new DataSetObserver() {
+        // Firebase query to retrieve chatData and event listener
+        final Firebase ref = new Firebase("https://medichat-d5712.firebaseio.com/chatData");
+        com.firebase.client.Query queryRef = ref.orderByChild("key").equalTo(key);
+        queryRef.addChildEventListener(new com.firebase.client.ChildEventListener() {
             @Override
-            public void onChanged() {
-                super.onChanged();
-                listView.setSelection(chatArrayAdapter.getCount() - 1);
+            public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "key: " + dataSnapshot.getKey() + " value " + dataSnapshot.getValue());
+                ChatData chatData = dataSnapshot.getValue(ChatData.class);
+                if(chatData.getSender().equals(sender)){
+                    chatData.setStatus(ChatConfig.RIGHT_BUBBLE);
+                }
+                chatArrayAdapter.add(chatData);
+            }
+
+            @Override
+            public void onChildChanged(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(com.firebase.client.DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
             }
         });
     }
@@ -106,7 +142,6 @@ public class ChatBubbleActivityForDoctor extends Activity {
         String msg = chatText.getText().toString();
         //insertByVolley(num, sendNum, msg, "1");
 
-        /*chatArrayAdapter.add(new ChatMessage("true", sendNum, msg));*/
         chatText.setText("");
 
         if (receiver.length() > 0 && msg.length() > 0) {
@@ -171,7 +206,23 @@ public class ChatBubbleActivityForDoctor extends Activity {
         mSmsManager.sendTextMessage(smsNumber, null, smsText, sentIntent, deliveredIntent);
     }
 
+    /**
+     * Generate key from sender and receiver
+     * @param sender
+     * @param receiver
+     * @return
+     */
+    private String makeKey(String sender, String receiver) {
 
+        String userArray[] = {sender, receiver};
+        Arrays.sort(userArray);
+        StringBuffer sb = new StringBuffer();
+        for (String e : userArray) {
+            sb.append(e);
+        }
+        String key = sb.toString();
+        return key;
+    }
 }
 
 

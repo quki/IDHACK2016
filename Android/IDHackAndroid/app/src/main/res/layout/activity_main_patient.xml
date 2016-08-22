@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pure.gothic.hackathon.idhackandroid.MainActivity">
+    tools:context=".MainActivityPatient">
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar_patient" />
 
     <TextView
         android:id="@+id/role"

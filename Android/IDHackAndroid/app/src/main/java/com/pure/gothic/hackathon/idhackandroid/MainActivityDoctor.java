@@ -54,6 +54,7 @@ public class MainActivityDoctor extends AppCompatActivity {
             logoutUser();
         }
 
+        // Enter receiver phone number
         otherPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -76,10 +77,11 @@ public class MainActivityDoctor extends AppCompatActivity {
             }
         });
 
+        // Launch chat activity
         requestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivityDoctor.this, ChatBubbleActivityForDoctor.class);
+                Intent i = new Intent(MainActivityDoctor.this, ChatActivityDoctor.class);
                 i.putExtra("sender", userId);
                 i.putExtra("receiver", otherPhone.getText().toString());
                 startActivity(i);

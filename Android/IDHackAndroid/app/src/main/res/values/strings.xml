@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">IDHackAndroid</string>
+    <string name="app_name">Medichat</string>
     <string name="title_activity_communicate">CommunicateActivity</string>
     <string name="title_activity_chat_bubble">ChatBubbleActivity</string>
     <string name="title_activity_chat_message">ChatMessage</string>
