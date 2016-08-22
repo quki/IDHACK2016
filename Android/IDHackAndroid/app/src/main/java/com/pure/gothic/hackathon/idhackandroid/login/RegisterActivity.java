@@ -20,7 +20,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.pure.gothic.hackathon.idhackandroid.MainActivity;
+import com.pure.gothic.hackathon.idhackandroid.MainActivityPatient;
 import com.pure.gothic.hackathon.idhackandroid.R;
 import com.pure.gothic.hackathon.idhackandroid.dialog.DialogHelper;
 import com.pure.gothic.hackathon.idhackandroid.volley.AppController;
@@ -87,7 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Session check user already login
         if (mSessionManager.isLoggedIn()) {
 
-            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+            Intent intent = new Intent(RegisterActivity.this, MainActivityPatient.class);
             startActivity(intent);
             finish();
         }

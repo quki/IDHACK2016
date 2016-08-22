@@ -23,15 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ChatBubbleActivityForDoctor"
+            android:name=".ChatActivityDoctor"
             android:label="@string/title_activity_chat_bubble" />
         <activity
-            android:name=".chat.ChatMessage"
-            android:label="@string/title_activity_chat_message" />
-        <activity
-            android:name=".ChatBubbleActivityForPatient"
+            android:name=".ChatActivityPatient"
             android:label="@string/title_activity_chat_bubble_activity_for_patient"></activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivityPatient" />
         <activity android:name=".login.RegisterActivity" />
         <activity android:name=".MainActivityDoctor" />
 

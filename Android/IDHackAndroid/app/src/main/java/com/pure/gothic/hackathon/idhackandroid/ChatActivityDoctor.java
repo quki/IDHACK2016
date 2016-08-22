@@ -23,8 +23,8 @@ import android.widget.ListView;
 
 import com.pure.gothic.hackathon.idhackandroid.adapter.ChatArrayAdapter;
 
-public class ChatBubbleActivityForDoctor extends Activity {
-    private static final String TAG = ChatBubbleActivityForDoctor.class.getSimpleName();
+public class ChatActivityDoctor extends Activity {
+    private static final String TAG = ChatActivityDoctor.class.getSimpleName();
     private ChatArrayAdapter chatArrayAdapter;
     private ListView listView;
     private EditText chatText;
@@ -36,7 +36,7 @@ public class ChatBubbleActivityForDoctor extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_bubble_for_doctor);
+        setContentView(R.layout.activity_chat_doctor);
 
 
         Intent i= getIntent();
@@ -106,7 +106,6 @@ public class ChatBubbleActivityForDoctor extends Activity {
         String msg = chatText.getText().toString();
         //insertByVolley(num, sendNum, msg, "1");
 
-        /*chatArrayAdapter.add(new ChatMessage("true", sendNum, msg));*/
         chatText.setText("");
 
         if (receiver.length() > 0 && msg.length() > 0) {

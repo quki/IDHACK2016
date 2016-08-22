@@ -18,8 +18,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.pure.gothic.hackathon.idhackandroid.MainActivity;
 import com.pure.gothic.hackathon.idhackandroid.MainActivityDoctor;
+import com.pure.gothic.hackathon.idhackandroid.MainActivityPatient;
 import com.pure.gothic.hackathon.idhackandroid.R;
 import com.pure.gothic.hackathon.idhackandroid.dialog.DialogHelper;
 import com.pure.gothic.hackathon.idhackandroid.volley.AppController;
@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
             int roleFromSession = userRole.get(SessionManager.KEY_YOUR_ROLE);
             // If already login, launch HomeActivity
             if(roleFromSession == 0){
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, MainActivityPatient.class);
                 intent.putExtra("userId",userId);
                 startActivity(intent);
                 finish();
@@ -163,14 +163,14 @@ public class LoginActivity extends AppCompatActivity {
                         mSessionManager.setLogin(true, userId, role);
 
                         if(role == 0){
-                            // Launch MainActivity
+                            // Launch MainActivityPatient
                             Intent intent = new Intent(LoginActivity.this,
-                                    MainActivity.class);
+                                    MainActivityPatient.class);
                             intent.putExtra("userId", userId);
                             startActivity(intent);
                             finish();
                         }else if(role == 1){
-                            // Launch MainActivity(Doctor)
+                            // Launch MainActivityPatient(Doctor)
                             Intent intent = new Intent(LoginActivity.this,
                                     MainActivityDoctor.class);
                             intent.putExtra("userId", userId);

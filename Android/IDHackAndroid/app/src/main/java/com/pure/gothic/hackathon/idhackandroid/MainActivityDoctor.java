@@ -79,7 +79,7 @@ public class MainActivityDoctor extends AppCompatActivity {
         requestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivityDoctor.this, ChatBubbleActivityForDoctor.class);
+                Intent i = new Intent(MainActivityDoctor.this, ChatActivityDoctor.class);
                 i.putExtra("sender", userId);
                 i.putExtra("receiver", otherPhone.getText().toString());
                 startActivity(i);

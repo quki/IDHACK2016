@@ -22,7 +22,7 @@ import com.pure.gothic.hackathon.idhackandroid.login.SessionManager;
  * contribute
  * jae, lemonhall2, CYhan, gon, quki
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivityPatient extends AppCompatActivity {
 
     private String userId;
     private SessionManager session;
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_patient);
 
         final Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         otherPhone = (EditText) findViewById(R.id.otherPhone);
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         requestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, ChatBubbleActivityForPatient.class);
+                Intent i = new Intent(MainActivityPatient.this, ChatActivityPatient.class);
                 i.putExtra("sender", userId);
                 i.putExtra("receiver", otherPhone.getText().toString());
                 startActivity(i);
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     private void signOut() {
         session.setLogin(false, userId, 0);
         // Launching the login activity
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        Intent intent = new Intent(MainActivityPatient.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
             // AlertDialog
             AlertDialog.Builder mAlertBuilder = new AlertDialog.Builder(
-                    MainActivity.this);
+                    MainActivityPatient.this);
             mAlertBuilder.setTitle("SIGN OUT")
                     .setMessage("REALLY?")
                     .setCancelable(false)

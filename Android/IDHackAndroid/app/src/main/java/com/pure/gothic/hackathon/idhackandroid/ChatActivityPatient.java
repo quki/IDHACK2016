@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.os.Message;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,13 +23,8 @@ import android.widget.ListView;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.pure.gothic.hackathon.idhackandroid.adapter.ChatArrayAdapter;
 import com.pure.gothic.hackathon.idhackandroid.chat.ChatConfig;
 import com.pure.gothic.hackathon.idhackandroid.chat.ChatData;
@@ -38,8 +32,8 @@ import com.pure.gothic.hackathon.idhackandroid.dialog.DialogHelper;
 
 import java.util.Arrays;
 
-public class ChatBubbleActivityForPatient extends Activity {
-    private static final String TAG = ChatBubbleActivityForPatient.class.getSimpleName();
+public class ChatActivityPatient extends Activity {
+    private static final String TAG = ChatActivityPatient.class.getSimpleName();
 
     private ChatArrayAdapter chatArrayAdapter;
     private ListView listView;
@@ -57,7 +51,7 @@ public class ChatBubbleActivityForPatient extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_bubble_for_patient);
+        setContentView(R.layout.activity_chat_patient);
         Firebase.setAndroidContext(this);
 
         mDialogHelper = new DialogHelper(this);
