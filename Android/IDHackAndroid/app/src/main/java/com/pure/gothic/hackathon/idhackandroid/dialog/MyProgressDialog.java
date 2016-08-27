@@ -6,17 +6,17 @@ import android.app.ProgressDialog;
 /**
  * Created by quki on 2016-02-13.
  */
-public class DialogHelper {
+public class MyProgressDialog {
 
     private Activity activity;
-    private ProgressDialog pDialog;
+    private android.app.ProgressDialog pDialog;
 
-    public DialogHelper(Activity activity) {
+    public MyProgressDialog(Activity activity) {
         this.activity = activity;
     }
 
     public void showPdialog(String msg, Boolean isCancelable) {
-        pDialog = new ProgressDialog(activity);
+        pDialog = new android.app.ProgressDialog(activity);
         pDialog.setCancelable(isCancelable);
         if (!pDialog.isShowing()) {
             pDialog.setMessage(msg);
