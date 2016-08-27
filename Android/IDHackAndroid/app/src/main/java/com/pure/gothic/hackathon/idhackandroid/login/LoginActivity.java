@@ -22,7 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.pure.gothic.hackathon.idhackandroid.MainActivityDoctor;
 import com.pure.gothic.hackathon.idhackandroid.MainActivityPatient;
 import com.pure.gothic.hackathon.idhackandroid.R;
-import com.pure.gothic.hackathon.idhackandroid.dialog.MyProgressDialog;
+import com.pure.gothic.hackathon.idhackandroid.dialog.ProgressDialogHelper;
 import com.pure.gothic.hackathon.idhackandroid.network.AppController;
 import com.pure.gothic.hackathon.idhackandroid.network.NetworkConfig;
 
@@ -35,7 +35,7 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
-    private MyProgressDialog mMyProgressDialog;
+    private ProgressDialogHelper mProgressDialogHelper;
     private SessionManager mSessionManager;
     private int role = 999; //default
     private final static String POST_TAG_LOGIN = "login";
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // Progress dialog
-        mMyProgressDialog = new MyProgressDialog(this);
+        mProgressDialogHelper = new ProgressDialogHelper(this);
 
         // Session manager
         mSessionManager = new SessionManager(getApplicationContext());
@@ -158,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void checkLogin(final String userId, final String password) {
 
-        mMyProgressDialog.showPdialog("PLEASE WAIT...", false);
+        mProgressDialogHelper.showPdialog("PLEASE WAIT...", false);
 
         StringRequest strReq = new StringRequest(Request.Method.POST,
                 NetworkConfig.URL_ACCOUNT, new Response.Listener<String>() {
@@ -166,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Login Response: " + response.toString());
-                mMyProgressDialog.hidePdialog();
+                mProgressDialogHelper.hidePdialog();
 
                 try {
                     JSONObject jObj = new JSONObject(response);
@@ -211,7 +211,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Login Error: " + error.getMessage());
                 Toast.makeText(LoginActivity.this,"NETWORK ERROR", Toast.LENGTH_SHORT).show();
-                mMyProgressDialog.hidePdialog();
+                mProgressDialogHelper.hidePdialog();
             }
         }) {
 
