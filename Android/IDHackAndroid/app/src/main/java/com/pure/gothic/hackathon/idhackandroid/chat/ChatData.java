@@ -1,10 +1,5 @@
 package com.pure.gothic.hackathon.idhackandroid.chat;
 
-import java.util.Arrays;
-
-/**
- * Created by quki on 2016-08-21.
- */
 public class ChatData {
 
     private String sender;
@@ -77,14 +72,6 @@ public class ChatData {
 
     public int getRole() {
         return role;
-    }
-
-    public String getRoleToString(){
-        if(role == RoleConfig.ROLE_PATIENT){
-            return "Patient";
-        }else{
-            return "Doctor";
-        }
     }
 
 

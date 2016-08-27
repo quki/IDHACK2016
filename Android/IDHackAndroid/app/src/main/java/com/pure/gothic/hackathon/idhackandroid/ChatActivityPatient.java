@@ -5,10 +5,12 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,12 +23,12 @@ import android.widget.ListView;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.pure.gothic.hackathon.idhackandroid.adapter.ChatArrayAdapter;
 import com.pure.gothic.hackathon.idhackandroid.chat.ChatConfig;
 import com.pure.gothic.hackathon.idhackandroid.chat.ChatData;
 import com.pure.gothic.hackathon.idhackandroid.chat.RoleConfig;
+import com.pure.gothic.hackathon.idhackandroid.network.CheckNetworkStatus;
+import com.pure.gothic.hackathon.idhackandroid.network.NetworkConfig;
 
 import java.util.Arrays;
 
@@ -39,15 +41,21 @@ public class ChatActivityPatient extends Activity {
     private Button buttonSend;
     private String receiver, sender, key;
 
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = firebaseDatabase.getReference();
-
+    private CheckNetworkStatus checkNetworkStatus;
     /*BroadcastReceiver myReceiver = new SMSBroadCast();*/
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_patient);
+
+        // FireBase
+        if (!Firebase.getDefaultConfig().isPersistenceEnabled())
+            Firebase.getDefaultConfig().setPersistenceEnabled(true);
         Firebase.setAndroidContext(this);
+        final Firebase ref = new Firebase("https://medichat-d5712.firebaseio.com/chatData");
+
+        // Check networks status
+        checkNetworkStatus = new CheckNetworkStatus(this);
 
         Intent i = getIntent();
         receiver = i.getStringExtra("receiver");
@@ -58,7 +66,7 @@ public class ChatActivityPatient extends Activity {
         listView = (ListView) findViewById(R.id.listView);
         chatText = (EditText) findViewById(R.id.chatText);
 
-        // ListView and adpter
+        // ListView and adapter
         chatArrayAdapter = new ChatArrayAdapter(getApplicationContext(), R.layout.item_message_left);
         listView.setAdapter(chatArrayAdapter);
         listView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
@@ -94,18 +102,22 @@ public class ChatActivityPatient extends Activity {
             }
         });
 
-        // Send to Firebase database
+
+        // Send to FireBase database
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                ChatData chatData = new ChatData(sender, receiver, chatText.getText().toString(), key);
-                databaseReference.child("chatData").push().setValue(chatData);
+                String message = chatText.getText().toString();
+                ChatData chatData = new ChatData(sender, receiver, message, key);
+                ref.push().setValue(chatData);
+                if(!NetworkConfig.IS_NETWORK_ON){
+                    sendMessageSMS(message);
+                }
                 chatText.setText("");
             }
         });
 
-        // Firebase query to retrieve chatData and event listener
-        final Firebase ref = new Firebase("https://medichat-d5712.firebaseio.com/chatData");
+        // FireBase query to retrieve chatData and event listener
         com.firebase.client.Query queryRef = ref.orderByChild("key").equalTo(key);
         queryRef.addChildEventListener(new com.firebase.client.ChildEventListener() {
             @Override
@@ -144,13 +156,12 @@ public class ChatActivityPatient extends Activity {
 
             }
         });
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("onDestory()", "브로드캐스트리시버 해제됨");
+        checkNetworkStatus.unRegister();
     }
 
     private boolean sendChatMessage() {
@@ -210,9 +221,6 @@ public class ChatActivityPatient extends Activity {
 
     /**
      * Generate key from sender and receiver
-     * @param sender
-     * @param receiver
-     * @return
      */
     private String makeKey(String sender, String receiver) {
 
@@ -224,5 +232,28 @@ public class ChatActivityPatient extends Activity {
         }
         String key = sb.toString();
         return key;
+    }
+
+    /**
+     * Send message using SMS service
+     * when network status OFF !
+     */
+    private void sendMessageSMS(String message){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(ChatActivityPatient.this);
+        dialog.setTitle("NETWORK STATUS OFF");
+        dialog.setMessage("Network status is off is send message by SMS?\n"+message);
+        dialog.setPositiveButton("SEND SMS", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
     }
 }

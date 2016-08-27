@@ -57,7 +57,7 @@ public class ChatArrayAdapter extends ArrayAdapter<ChatData> {
         }
         TextView label = (TextView) convertView.findViewById(R.id.label);
         TextView message = (TextView) convertView.findViewById(R.id.message);
-        label.setText(chatData.getRoleToString());
+        label.setText(chatData.getRole() == RoleConfig.ROLE_DOCTOR ? "Doctor" : "Patient");
         message.setText(chatData.getText());
 
         if(chatData.getStatus() == ChatConfig.RIGHT_BUBBLE){
