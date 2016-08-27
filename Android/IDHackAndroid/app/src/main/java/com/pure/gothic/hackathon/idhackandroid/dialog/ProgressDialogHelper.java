@@ -6,12 +6,12 @@ import android.app.ProgressDialog;
 /**
  * Created by quki on 2016-02-13.
  */
-public class MyProgressDialog {
+public class ProgressDialogHelper {
 
     private Activity activity;
     private android.app.ProgressDialog pDialog;
 
-    public MyProgressDialog(Activity activity) {
+    public ProgressDialogHelper(Activity activity) {
         this.activity = activity;
     }
 

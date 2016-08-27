@@ -1,4 +1,4 @@
-package com.pure.gothic.hackathon.idhackandroid.adapter;
+package com.pure.gothic.hackathon.idhackandroid.chat;
 
 import android.content.Context;
 import android.graphics.Color;

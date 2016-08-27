@@ -32,12 +32,6 @@
         <activity android:name=".login.RegisterActivity" />
         <activity android:name=".MainActivityDoctor" />
 
-        <receiver android:name=".sms.SMSBroadCast">
-            <intent-filter android:priority="1000">
-                <action android:name="android.provider.Telephony.SMS_SENT" />
-            </intent-filter>
-        </receiver>
-
     </application>
 
 </manifest>

@@ -23,7 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.pure.gothic.hackathon.idhackandroid.MainActivityPatient;
 import com.pure.gothic.hackathon.idhackandroid.R;
-import com.pure.gothic.hackathon.idhackandroid.dialog.MyProgressDialog;
+import com.pure.gothic.hackathon.idhackandroid.dialog.ProgressDialogHelper;
 import com.pure.gothic.hackathon.idhackandroid.network.AppController;
 import com.pure.gothic.hackathon.idhackandroid.network.NetworkConfig;
 
@@ -36,7 +36,7 @@ import java.util.Map;
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = RegisterActivity.class.getSimpleName();
-    private MyProgressDialog mMyProgressDialog;
+    private ProgressDialogHelper mProgressDialogHelper;
     private int role;
     private final static String POST_TAG_REGISTER = "register";
 
@@ -85,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         // Progress dialog
-        mMyProgressDialog = new MyProgressDialog(this);
+        mProgressDialogHelper = new ProgressDialogHelper(this);
 
         // Session manager
         SessionManager mSessionManager = new SessionManager(getApplicationContext());
@@ -139,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private void registerUser(final String userId, final String password) {
 
-        mMyProgressDialog.showPdialog("PLEASE WAIT...", false);
+        mProgressDialogHelper.showPdialog("PLEASE WAIT...", false);
 
         StringRequest strReq = new StringRequest(Request.Method.POST, NetworkConfig.URL_ACCOUNT,
                 new Response.Listener<String>() {
@@ -147,7 +147,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
 
-                        mMyProgressDialog.hidePdialog();
+                        mProgressDialogHelper.hidePdialog();
 
                         try {
                             JSONObject jObj = new JSONObject(response);
@@ -187,7 +187,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.e(TAG, "Registration Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(), error.getMessage(),
                         Toast.LENGTH_SHORT).show();
-                mMyProgressDialog.hidePdialog();
+                mProgressDialogHelper.hidePdialog();
             }
         }) {
 

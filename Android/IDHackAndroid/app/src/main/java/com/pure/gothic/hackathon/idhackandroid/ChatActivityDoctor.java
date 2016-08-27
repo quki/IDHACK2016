@@ -2,16 +2,9 @@ package com.pure.gothic.hackathon.idhackandroid;
 
 
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,18 +13,16 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.pure.gothic.hackathon.idhackandroid.adapter.ChatArrayAdapter;
+import com.pure.gothic.hackathon.idhackandroid.chat.ChatArrayAdapter;
 import com.pure.gothic.hackathon.idhackandroid.chat.ChatConfig;
 import com.pure.gothic.hackathon.idhackandroid.chat.ChatData;
 import com.pure.gothic.hackathon.idhackandroid.chat.RoleConfig;
 import com.pure.gothic.hackathon.idhackandroid.network.CheckNetworkStatus;
 import com.pure.gothic.hackathon.idhackandroid.network.NetworkConfig;
+import com.pure.gothic.hackathon.idhackandroid.sms.SMSHelper;
 
 import java.util.Arrays;
 
@@ -108,7 +99,8 @@ public class ChatActivityDoctor extends Activity {
                 ChatData chatData = new ChatData(sender, receiver, message, key);
                 ref.push().setValue(chatData);
                 if(!NetworkConfig.IS_NETWORK_ON){
-                    sendMessageSMS(message);
+                    SMSHelper smsHelper = new SMSHelper(ChatActivityDoctor.this);
+                    smsHelper.sendMessageSMS("01076779064", message);
                 }
                 chatText.setText("");
             }
@@ -156,74 +148,10 @@ public class ChatActivityDoctor extends Activity {
         
     }
 
-
-    private boolean sendChatMessage() {
-
-        String msg = chatText.getText().toString();
-        //insertByVolley(num, sendNum, msg, "1");
-
-        chatText.setText("");
-
-        if (receiver.length() > 0 && msg.length() > 0) {
-            //sendSMS(receiver, msg);
-            Log.d("test1", "xml정보보냄 sendSMS()로");
-        } else {
-        }
-        //side = !side;
-        return true;
-    }
-
-    public void sendSMS(String smsNumber, String smsText) {
-        PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0, new Intent("android.provider.Telephony.SMS_RECEIVED"), 0);
-        PendingIntent deliveredIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_DELIVERED_ACTION"), 0);
-        Log.d("test1", "sendSMS()함수 내부작동");
-        /**
-         * SMS가 발송될때 실행
-         * When the SMS massage has been sent
-         */
-        registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        // 전송 성공
-                        //requestByVolley();
-                        break;
-                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        // 전송 실패
-                        Log.d("test1", "전송실패");
-                        break;
-                    case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        // 서비스 지역 아님
-                        Log.d("test1", "전송지역아님");
-                        break;
-                    case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        // 무선 꺼짐
-                        Log.d("test1", "전송무선꺼짐");
-                        break;
-                    case SmsManager.RESULT_ERROR_NULL_PDU:
-                        // PDU 실패
-                        Log.d("test1", "pdu실패");
-                        break;
-                }
-            }
-        }, new IntentFilter("android.provider.Telephony.SMS_RECEIVED"));
-
-        /**
-         * SMS가 도착했을때 실행
-         * When the SMS massage has been delivered
-         */
-        registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                Log.e("PPPADSAF", "asdfsadf");
-
-            }
-        }, new IntentFilter("android.provider.Telephony.SMS_RECEIVED"));
-
-        SmsManager mSmsManager = SmsManager.getDefault();
-        mSmsManager.sendTextMessage(smsNumber, null, smsText, sentIntent, deliveredIntent);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        checkNetworkStatus.unRegister();
     }
 
     /**
@@ -244,28 +172,6 @@ public class ChatActivityDoctor extends Activity {
         return key;
     }
 
-    /**
-     * Send message using SMS service
-     * when network status OFF !
-     */
-    private void sendMessageSMS(String message){
-        AlertDialog.Builder dialog = new AlertDialog.Builder(ChatActivityDoctor.this);
-        dialog.setTitle("NETWORK STATUS OFF");
-        dialog.setMessage("Network status is off is send message by SMS?\n"+message);
-        dialog.setPositiveButton("SEND SMS", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        dialog.show();
-    }
 }
 
 
