@@ -28,7 +28,7 @@ public class SMSHelper {
     public void sendMessageSMS(final String phoneNum, final String message) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle("NETWORK STATUS OFF");
-        dialog.setMessage("Network status is off is send message by SMS?\n" + message);
+        dialog.setMessage("Would you like to send a SMS text message?\n" + message);
         dialog.setPositiveButton("SEND SMS", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
