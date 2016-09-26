@@ -105,7 +105,7 @@ public class ChatActivityPatient extends Activity {
                 ref.push().setValue(chatData);
                 if(!NetworkConfig.IS_NETWORK_ON){
                     SMSHelper smsHelper = new SMSHelper(ChatActivityPatient.this);
-                    smsHelper.sendMessageSMS("01076779064", message);
+                    smsHelper.sendMessageSMS(receiver, message);
                 }
                 chatText.setText("");
             }
